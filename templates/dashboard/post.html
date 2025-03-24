@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{post.title}} | Quepter Youth Hub{% endblock title %}
+{% block content %}
+<div class="col-xl-12">
+    <div class="nav-align-top mb-4">
+      <form id="editPostForm" method="POST" action="{% url 'editPost' post.uuid %}">
+          {% csrf_token %}
+          <input type="hidden" name="post_id" id="post-id" value="">
+          <div class="mb-3">
+            <label for="postTitle" class="form-label">Title</label>
+            <input type="text" name="title" class="form-control" id="postTitle" value="{{post.title}}" required>
+          </div>
+          <div class="mb-3">
+            <label for="postCategory" class="form-label">Category</label>
+            <select name="category" id="postCategory" class="form-control" required>
+              <option value="{{post.category}}" >{{post.category}}</option>
+              <option value="Business">Business</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="postContent" class="form-label">Post Content</label>
+            <textarea name="content" class="form-control" id="postContent" rows="3" required>{{post.content}}</textarea>
+          </div>
+          <button type="submit" class="btn btn-danger">Save</button>
+      </form>
+    </div>
+  </div>
+{% endblock content %}

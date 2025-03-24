@@ -1,0 +1,8 @@
+<div class="message-list">
+    {% for message in messages %}
+        <div class="message">
+            <strong>{{ message.sender.username }}:</strong> {{ message.get_decrypted_message }}
+            <small>{{ message.sent_at|date:"H:i" }}</small>
+        </div>
+    {% endfor %}
+</div>

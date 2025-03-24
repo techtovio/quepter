@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Comments | Quepter Youth Hub{% endblock title %}
+{% block content %}
+
+<div class="container">
+    <!-- Display Post Details -->
+    <div class="border-bottom pb-3 mb-4">
+        <h5>{{ post.title }}</h5>
+        <p>{{ post.content|linebreaks }}</p>
+        <small class="text-muted">Posted by {{ post.author.first_name }} {{ post.author.last_name }} on {{ post.date_posted }}</small>
+    </div>
+  
+    <!-- Comments Section -->
+    <h6 class="mb-3">Comments</h6>
+    <div id="comments-section">
+      {% if comments %}
+        {% for comment in comments %}
+        <div class="border-bottom pb-2 mb-3">
+          <div class="d-flex align-items-start">
+            <img src="{% if comment.user.profile.image %}{{ comment.user.profile.image.url }}{% else %}{% static 'person.webp' %}{% endif %}" alt="{{ comment.user.username }}" class="rounded-circle" width="50" height="50">
+            <div class="ms-3">
+              <strong>{{ comment.user.first_name }} {{ comment.user.last_name }}:</strong>
+              <p>{{ comment.comment }}</p>
+              <small class="text-muted">{{ comment.timestamp }}</small>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p>No comments yet. Be the first to comment!</p>
+      {% endif %}
+    </div>
+  
+    <!-- Add a New Comment -->
+    <form id="comment-form" method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="commentTextArea" class="form-label">Add your Comment</label>
+        <textarea class="form-control" id="commentTextArea" name="comment" rows="3" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit Comment</button>
+    </form>
+</div>
+
+<script>
+  // AJAX for submitting a new comment
+  document.getElementById('comment-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+  
+    const commentText = document.getElementById('commentTextArea').value;
+  
+    fetch("{% url 'addCommentAjax' post.uuid %}", {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ comment: commentText })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        const newComment = `
+          <div class="border-bottom pb-2 mb-3">
+            <div class="d-flex align-items-start">
+              <img src="${data.profileImage}" alt="${data.username}" class="rounded-circle" width="50" height="50">
+              <div class="ms-3">
+                <strong>${data.username}:</strong>
+                <p>${data.comment}</p>
+                <small class="text-muted">${data.timestamp}</small>
+              </div>
+            </div>
+          </div>
+        `;
+        document.getElementById('comments-section').insertAdjacentHTML('beforeend', newComment);
+        document.getElementById('commentTextArea').value = ''; // Clear the textarea
+      }
+    });
+  });
+</script>
+
+{% endblock content %}

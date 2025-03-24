@@ -1,0 +1,70 @@
+{% extends 'b.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <div class="page-banner home-banner">
+      <div class="row align-items-center flex-wrap-reverse h-100">
+        <!-- Contribution Form Section -->
+        <div class="col-md-6 py-5 wow zoomIn align-items-center">
+            <div class="img-fluid text-center">
+                {% include 'partials/_messages.html' %}
+                <form action="{% url 'contribute' %}" method="post" class="contact-form bg-light p-4 shadow-sm rounded">
+                    {% csrf_token %}
+                    <h2 class="mb-4 font-weight-bold text-primary">Contribute</h2>
+                    <p class="text-muted">Complete your contribution via MPESA. You will be prompted with an STK push. Please enter your MPESA PIN to finalize the transaction.</p>
+                    <div class="row form-group">
+                      <div class="col-md-12 mb-3">
+                        <label class="text-dark font-weight-medium" for="tel">Phone Number</label>
+                        <input name="tel" type="tel" id="tel" class="form-control" placeholder="Enter your phone number" required>
+                      </div>
+                      <div class="col-md-12 mb-3">
+                        <label class="text-dark font-weight-medium" for="amount">Amount (KES)</label>
+                        <input name="amount" type="number" id="amount" class="form-control" placeholder="Enter contribution amount" required>
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block py-2" style="font-size: 18px;">Contribute</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Empowerment Message Section -->
+        <div class="col-md-6 py-5 wow fadeInLeft text-center">
+          <h1 class="mb-4 font-weight-bold" style="color: #2c3e50;">Join Us in Empowering the Future.</h1>
+          <p class="text-lg text-grey mb-5" style="font-size: 18px; line-height: 1.6;">
+            Your contributions to our crowdfunding campaigns are more than just donations; they are investments in a brighter future for our youth.
+          </p>
+        </div>
+      </div>
+    </div>
+</div>
+
+<!-- Impact Section: How Contributions Help -->
+<div class="page-section" style="background-color: #f9f9f9;">
+    <div class="container">
+      <div class="row align-items-center">
+        <!-- Image Section -->
+        <div class="col-lg-6 py-3">
+            <div class="img-fluid text-center py-3">
+              <img src="{% static 'donate.png' %}" class="rounded shadow" height="90%" width="90%" alt="Support Quepter Initiatives">
+            </div>
+          </div>
+        
+        <!-- Details Section -->
+        <div class="col-lg-6 py-3">
+          <h2 class="title-section text-primary font-weight-bold mb-3">How Your Contributions Help</h2>
+          <div class="divider mb-4" style="background-color: #2c3e50; height: 3px; width: 50px;"></div>
+
+          <p class="text-muted"><b>Empower Young Innovators:</b> Your support helps fund groundbreaking projects proposed by our members, turning ideas into reality and fostering innovation.</p>
+          <p class="text-muted"><b>Create Employment Opportunities:</b> By backing our initiatives, you are directly contributing to the creation of jobs and sustainable livelihoods for young people.</p>
+          <p class="text-muted"><b>Support Startups:</b> Your donations help budding entrepreneurs get the funding they need to launch their startups, creating a ripple effect of growth and prosperity.</p>
+          <p class="text-muted"><b>Fuel Community Projects:</b> Whether it’s a local charity, a community-driven development project, or an educational initiative, your contribution makes a lasting impact.</p>
+
+          <div class="h5 text-primary font-weight-bold">Thank You for Being a Part of This Journey.</div>
+          <p class="text-muted">We are deeply grateful for every donation, no matter the size. Each contribution brings us one step closer to our goal of empowering the youth and building a thriving community. Together, we can achieve great things.</p>
+        </div>
+      </div>
+    </div>
+</div>
+
+{% endblock content %}

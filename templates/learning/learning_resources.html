@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Learning Resources | Quepter Youth Hub{% endblock title %}
+
+{% block content %}
+<div class="container my-4">
+  <!-- Analytics Section -->
+  <div class="row mb-4">
+    <div class="col">
+      <div class="card text-white" style="background-color: #1A73E8;">
+        <div class="card-body">
+          <h5 class="card-title">Your Analytics</h5>
+          <p class="card-text">Total Downloads: 150 | Points Earned: 200</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload Resource Button -->
+  <div class="row mb-4">
+    <div class="col text-end">
+      <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#uploadResourceModal">
+        <i class="bi bi-upload"></i> Upload Resource
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabs for Resources -->
+  <ul class="nav nav-tabs" id="resourceTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="all-resources-tab" data-bs-toggle="tab" data-bs-target="#all-resources" type="button" role="tab" aria-controls="all-resources" aria-selected="true">Resources</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="my-resources-tab" data-bs-toggle="tab" data-bs-target="#my-resources" type="button" role="tab" aria-controls="my-resources" aria-selected="false">My Resources</button>
+    </li>
+  </ul>
+  <div class="tab-content mt-3" id="resourceTabsContent">
+    <!-- All Resources Tab -->
+    <div class="tab-pane fade show active" id="all-resources" role="tabpanel" aria-labelledby="all-resources-tab">
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for resource in resources %}
+        <div class="col">
+          <div class="card h-100 position-relative">
+            {% if resource.image %}
+              <img src="{{ resource.image.url }}" class="card-img-top" alt="{{ resource.title }}">
+            {% else %}
+              <img src="{% static 'default-resource.jpg' %}" class="card-img-top" alt="{{ resource.title }}">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title text-primary">{{ resource.title }}</h5>
+              <p class="card-text">{{ resource.description|truncatewords:20 }}</p>
+              <a href="{% url 'view_ebook' resource.uuid %}" class="btn btn-primary">View Details</a>
+            </div>
+            <div class="position-absolute top-0 end-0 m-2 bg-primary text-white px-2 rounded-pill" style="font-size: 0.9rem;">
+              {{ resource.download_count }} Downloads
+            </div>
+          </div>
+        </div>
+        {% empty %}
+          <p>No resources available.</p>
+        {% endfor %}
+      </div>
+    </div>
+    <!-- My Resources Tab -->
+    <div class="tab-pane fade" id="my-resources" role="tabpanel" aria-labelledby="my-resources-tab">
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for resource in resources %}
+          {% if resource.created_by == request.user %}
+          <div class="col">
+            <div class="card h-100 position-relative">
+              {% if resource.image %}
+                <img src="{{ resource.image.url }}" class="card-img-top" alt="{{ resource.title }}">
+              {% else %}
+                <img src="{% static 'default-resource.jpg' %}" class="card-img-top" alt="{{ resource.title }}">
+              {% endif %}
+              <div class="card-body">
+                <h5 class="card-title text-primary">{{ resource.title }}</h5>
+                <p class="card-text">{{ resource.description|truncatewords:20 }}</p>
+                <a href="{% url 'view_ebook' resource.uuid %}" class="btn btn-primary">View Details</a>
+              </div>
+              <div class="position-absolute top-0 end-0 m-2 bg-primary text-white px-2 rounded-pill" style="font-size: 0.9rem;">
+                {{ resource.download_count }} Downloads
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        {% empty %}
+          <p>You have not uploaded any resources yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Resource Modal -->
+<div class="modal fade" id="uploadResourceModal" tabindex="-1" aria-labelledby="uploadResourceModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="uploadResourceForm" action="{% url 'upload_resource' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="uploadResourceModalLabel">Upload Learning Resource</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Form Fields -->
+          <div class="mb-3">
+            <label for="resourceTitle" class="form-label">Title</label>
+            <input type="text" class="form-control" id="resourceTitle" name="title" required>
+          </div>
+          <div class="mb-3">
+            <label for="resourceDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="resourceDescription" name="description" rows="3" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="resourceType" class="form-label">Resource Type</label>
+            <select class="form-select" id="resourceType" name="resource_type" required>
+              <option value="ebook">Ebook</option>
+              <option value="video">Video</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="accessType" class="form-label">Access Type</label>
+            <select class="form-select" id="accessType" name="access_type" required>
+              <option value="free">Free</option>
+              <option value="paid">Paid</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="videoLink" class="form-label">Video Link (if applicable)</label>
+            <input type="url" class="form-control" id="videoLink" name="video_link">
+          </div>
+          <div class="mb-3">
+            <label for="resourceFile" class="form-label">Upload File (for ebooks)</label>
+            <input type="file" class="form-control" id="resourceFile" name="file">
+          </div>
+          <div class="mb-3">
+            <label for="resourceImage" class="form-label">Upload Image</label>
+            <input type="file" class="form-control" id="resourceImage" name="image">
+          </div>
+          <div class="mb-3">
+            <label for="resourcePrice" class="form-label">Price (if paid)</label>
+            <input type="number" step="0.01" class="form-control" id="resourcePrice" name="price">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Upload Resource</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}

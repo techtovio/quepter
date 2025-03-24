@@ -1,0 +1,255 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Leadership Voting | Quepter Youth Hub{% endblock title %}
+{% block content %}
+
+<style>
+    .leadership-container {
+        background-color: #f7f9fc;
+        padding: 50px;
+        border-radius: 12px;
+        margin-bottom: 40px;
+    }
+
+    .leadership-header {
+        font-size: 2.5rem;
+        color: #343a40;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .position-header {
+        font-size: 1.8rem;
+        color: #495057;
+        margin-bottom: 20px;
+    }
+
+    .candidate-list {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        margin-bottom: 40px;
+    }
+
+    .candidate-card {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 10px;
+        width: 260px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .candidate-card img {
+        border-radius: 50%;
+        margin-bottom: 15px;
+    }
+
+    .candidate-name {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .candidate-manifesto {
+        font-size: 1rem;
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    .vote-button {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .vote-button:hover {
+        background-color: #218838;
+    }
+
+    .votes-count {
+        margin-top: 10px;
+        font-size: 1.1rem;
+        color: #555;
+    }
+
+    .leadership-application-section {
+        margin-top: 40px;
+    }
+
+    .leadership-application-header {
+        font-size: 2rem;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .application-form {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+
+    .apply-button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .apply-button:hover {
+        background-color: #0056b3;
+    }
+
+    .requirement-text {
+        color: #dc3545;
+        font-size: 0.9rem;
+        margin-top: -10px;
+    }
+</style>
+
+<div class="container">
+    <!-- Leadership Voting Section -->
+    <div class="leadership-container">
+        <h2 class="leadership-header">Leadership Voting</h2>
+
+        {% for position in positions %}
+        <div class="position-section">
+            <h3 class="position-header">{{ position.title }}</h3>
+            <p>{{ position.description }}</p>
+
+            <div class="candidate-list">
+                {% for candidate in position.candidate_set.all %}
+                <div class="candidate-card">
+                    <img src="{{ candidate.user.profile.picture.url }}" alt="{{ candidate.user.username }}" class="img-fluid" width="100">
+                    <h3 class="candidate-name">{{ candidate.user.username }}</h3>
+                    <p class="candidate-manifesto">{{ candidate.manifesto }}</p>
+                    <button class="vote-button" data-candidate-id="{{ candidate.id }}">Vote</button>
+                    <div class="votes-count">Votes: <span id="voteCount-{{ candidate.id }}">{{ candidate.vote_set.count }}</span></div>
+                </div>
+                {% empty %}
+                <p>No candidates available for this position yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Leadership Application Section -->
+    <div class="leadership-application-section">
+        <h2 class="leadership-application-header">Apply for Leadership Position</h2>
+        <div class="application-form">
+            <form id="leadership-application-form" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="position_id">Select Position</label>
+                    <select id="position_id" name="position_id" class="form-control">
+                        {% for position in positions %}
+                        <option value="{{ position.id }}">{{ position.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="manifesto">Why are you suitable for this position?</label>
+                    <textarea id="manifesto" name="manifesto" class="form-control" rows="5" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="points">Points</label>
+                    <input type="number" id="points" name="points" class="form-control" value="{{ request.user.profile.points }}" disabled>
+                    <p class="requirement-text">*Minimum points required: {{ position.points_required }}</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="referrals">Referrals</label>
+                    <input type="text" id="referrals" name="referrals" class="form-control" placeholder="You need at least 5 referrals">
+                    <p class="requirement-text">*You currently have {{ request.user.profile.referred_friends.count }} referrals.</p>
+                </div>
+
+                <button type="submit" class="apply-button">Submit Application</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.vote-button').forEach(button => {
+            button.addEventListener('click', function () {
+                const candidateId = this.getAttribute('data-candidate-id');
+                const csrfToken = '{{ csrf_token }}';
+                
+                fetch('/vote/cast/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        'candidate_id': candidateId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const voteCountElement = document.getElementById(`voteCount-${candidateId}`);
+                        voteCountElement.textContent = parseInt(voteCountElement.textContent) + 1;
+                    } else {
+                        alert(data.error);
+                    }
+                });
+            });
+        });
+
+        // Handle leadership application form
+        document.getElementById('leadership-application-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+
+            fetch('/leadership/apply/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Application submitted successfully!');
+                } else {
+                    alert(data.error);
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock content %}

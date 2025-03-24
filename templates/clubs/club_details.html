@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block title %}{{ club.name }} | Dashboard{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="text-center mb-4">{{ club.name }}</h2>
+            <img src="{{ club.image.url }}" alt="{{ club.name }}" class="img-fluid rounded mx-auto d-block mb-3" style="max-height: 300px;">
+
+            {% if is_member %}
+            <!-- Member Dashboard -->
+            <div class="card shadow-sm p-3 mb-4">
+                <div class="card-body">
+                    <h4 class="text-center mb-4">Member Dashboard</h4>
+                    
+                    <!-- Membership Statistics -->
+                    <h5>Membership Statistics</h5>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item">Weekly Contribution: <span class="fw-bold">KES {{ weekly_contributions|default:"0.00" }}</span></li>
+                        <li class="list-group-item">My Contributions: <span class="fw-bold">KES {{ total_contributions|default:"0.00" }}</span></li>
+                        <li class="list-group-item">Annual Returns (Estimated): <span class="fw-bold">KES {{ annual_returns|default:"0.00" }}</span></li>
+                        <li class="list-group-item">Loyalty Points : <span class="fw-bold">{{ loyalty_points|default:"0.00" }} points</span></li>
+                        <li class="list-group-item">Membership Status: <span class="badge bg-success">Active</span></li>
+                    </ul>
+
+                    <!-- Projects and Events -->
+                    <h5>Club Projects & Events</h5>
+                    <div class="list-group mb-3">
+                        {% for project in club_projects %}
+                            <a href="{% url 'project_details' project.id %}" class="list-group-item list-group-item-action">
+                                <h6 class="mb-1">{{ project.name }}</h6>
+                                <p class="mb-1 text-muted">{{ project.description|truncatewords:15 }}</p>
+                                <small class="text-muted">Starts on: {{ project.start_date|date:"M d, Y" }}</small>
+                            </a>
+                        {% empty %}
+                            <p class="text-muted">No ongoing projects or events for this club.</p>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Benefits of Joining -->
+                    <h5>Why You’ll Benefit</h5>
+                    <p>{{ club.benefits }}</p>
+
+                    <!-- How Interests are Generated -->
+                    <h5>How Interests are Generated</h5>
+                    <p>{{ club.interest_generation }}</p>
+
+                    <!-- Weekly Contribution Form -->
+                    <h5>Contribute Weekly Money</h5>
+                    <form method="POST" action="{% url 'contribute_to_club' club.uuid %}" class="d-flex">
+                        {% csrf_token %}
+                        <input type="number" name="amount" class="form-control me-2" placeholder="Enter amount (KES)" required>
+                        <button type="submit" class="btn btn-primary">Contribute</button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <!-- Non-Member Overview -->
+            <div class="card shadow-sm p-3 mb-4">
+                <div class="card-body">
+                    <h4 class="text-center mb-4">Club Overview</h4>
+
+                    <!-- Category -->
+                    <h5>Category</h5>
+                    <span class="badge bg-secondary">{{ club.get_category_display }}</span>
+
+                    {% if user.profile.funds >= club.joining_amount %}
+                    <!-- Join Club Button -->
+                     <span><b>MY FUNDS: KES {{user.profile.funds}}</b></span>
+                    <button class="btn btn-success mt-3 w-100" data-bs-toggle="modal" data-bs-target="#joinClubModal">
+                        Join Club (KES {{club.joining_fee}} )
+                    </button>
+                    {% else %}
+                    <br>
+                    <span><b>MY FUNDS: KES {{user.profile.funds}}</b></span>
+                    <p style=" font-size: 14px; line-height: 1.6; color: #34495E;">
+                        Joining a club requires a fee of KES 100. Please ensure that you have sufficient funds in your account before proceeding.
+                      </p>
+                    <button class="btn btn-warning mt-3 w-100" data-bs-toggle="modal" data-bs-target="#AddFunds">
+                        Insuficient Funds - Deposit
+                    </button>
+                    {% endif %}
+
+                    <br><hr><br>
+                    <p>{{ club.description | linebreaks }}</p>
+
+
+                    <!-- Terms & Conditions -->
+                    <h5>Terms & Conditions</h5>
+                    <p>{{ club.terms_and_conditions|linebreaks }}</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Join Club Confirmation Modal -->
+<div class="modal fade" id="joinClubModal" tabindex="-1" aria-labelledby="joinClubModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="joinClubModalLabel">Join {{ club.name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to join this club for a one-time fee of KES {{club.joining_amount}}? Your account will be charged, and this action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <form method="POST" action="{% url 'join_club' club.uuid %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Yes, Join</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

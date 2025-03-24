@@ -1,0 +1,343 @@
+<!-- p2p_points.html -->
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    /* styles.css */
+#history-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.list-group-item {
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.list-group-item:hover {
+    background-color: #e9ecef;
+}
+
+</style>
+<div class="container mt-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center">
+        <!-- Section Title -->
+        <div class="mb-2">
+            <h2 class="mb-0">P2P Points Exchange</h2>
+        </div>
+        
+        <!-- User Points Overview -->
+        <div class="mb-2">
+            <h4 class="mb-0">Your Points: <span id="user-points">{{ user.profile.points }}</span></h4>
+        </div>
+        
+        <!-- Notifications Dropdown -->
+        <div class="dropdown mb-2">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                Notifications
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" id="notifications-list">
+                {% for notification in notifications %}
+                    <li class="dropdown-item">
+                        {{ notification.message }} - <small>{{ notification.timestamp|timesince }} ago</small>
+                    </li>
+                {% empty %}
+                    <li class="dropdown-item text-muted">No recent notifications</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    
+
+    <!-- Points Transfer Section -->
+    <div class="card mb-4 mt-3">
+        <div class="card-header">
+            <h4>Transfer Points</h4>
+        </div>
+        <div class="card-body">
+            <form id="transfer-form">
+                <div class="mb-3">
+                    <label for="recipient_code" class="form-label">Member ID</label>
+                    <input type="text" class="form-control" id="recipient_code" name="recipient_code" placeholder="Enter member's ID" required>
+                </div>
+                <div class="mb-3">
+                    <label for="amount" class="form-label">Points Amount</label>
+                    <input type="number" class="form-control" id="points" name="points" placeholder="Enter amount" min="1" required>
+                </div>
+                <div class="mb-3">
+                    <label for="message" class="form-label">Message (optional)</label>
+                    <textarea class="form-control" id="message" name="message" placeholder="Add a message"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Transfer Points</button>
+            </form>
+            <div id="transfer-result" class="mt-3 text-success"></div>
+            <div id="transfer-result-failed" class="mt-3 text-danger"></div>
+        </div>
+    </div>
+
+    <!-- Points Sale Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Sell Your Points</h4>
+        </div>
+        <div class="card-body">
+            <div class="">
+                <p class="text-muted">Minimum number of points required for Listing is 10.</p>
+                <p class="text-muted">Please note that listing fee of 10:1 (points) Applies for all points listed on P2P, no refund on cancel.</p>
+            </div>
+            <form id="sell-form">
+                <div class="mb-3">
+                    <label for="points" class="form-label">Points to Sell</label>
+                    <input type="number" class="form-control" id="points" name="points" placeholder="Number of points" min="1" required>
+                </div>
+                <button type="submit" class="btn btn-primary">List for Sale</button>
+            </form>
+            <div id="sell-result" class="mt-3 text-success"></div>
+            <div id="sell-result-failed" class="mt-3 text-danger"></div>
+        </div>
+    </div>
+ 
+    <!-- Available Points for Sale -->
+    <div class="card">
+        <div class="card-header">
+            <h4>Available Points for Purchase</h4>
+        </div>
+        <div class="card-body">
+            <div id="sales-list">
+                {% if sales %}
+                    <ul class="list-group">
+                        {% for sale in sales %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>{{ sale.seller.username }}</strong>{{user}} is selling 
+                                    <span class="badge bg-primary">{{ sale.points }} Points</span> 
+                                    for <span class="text-success">{{ sale.price }} KES</span>
+                                </div>
+                                <button class="btn btn-success btn-sm" onclick="buyPoints({{ sale.id }})">Buy</button>
+                                {% if sale.seller == user %}
+                                    <button class="btn btn-danger" onclick="cancelSale('{{ sale.id }}')">Cancel</button>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted">No points are available for purchase at the moment.</p>
+                {% endif %}
+            </div>
+            <div id="buy-result" class="mt-3 text-success"></div>
+        </div>
+    </div>
+</div>
+<div class="container mt-4">
+    <h3>Transaction History</h3>
+    <div id="history-list" class="list-group">
+        <!-- History items will be dynamically inserted here -->
+    </div>
+</div>
+
+
+<!-- JavaScript for AJAX form submission -->
+<!-- Inside p2p_points.html -->
+<script>
+    // Update points and notifications periodically
+    function updateUserPointsAndNotifications() {
+        fetch("{% url 'get_user_points_and_notifications' %}")
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('user-points').innerText = data.points;
+            const notificationsList = document.getElementById('notifications-list');
+            notificationsList.innerHTML = '';
+            if (data.notifications.length > 0) {
+                data.notifications.forEach(notification => {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('dropdown-item');
+                    listItem.innerText = `${notification.message} - ${notification.timestamp}`;
+                    notificationsList.appendChild(listItem);
+                });
+            } else {
+                const emptyItem = document.createElement('li');
+                emptyItem.classList.add('dropdown-item', 'text-muted');
+                emptyItem.innerText = 'No recent notifications';
+                notificationsList.appendChild(emptyItem);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Update available points for purchase every 10 seconds
+    function updateAvailablePoints() {
+        fetch("{% url 'get_available_sales' %}")
+        .then(response => response.json())
+        .then(data => {
+            const salesList = document.getElementById('sales-list');
+            salesList.innerHTML = '';
+            if (data.sales.length > 0) {
+                const listGroup = document.createElement('ul');
+                listGroup.classList.add('list-group');
+                data.sales.forEach(sale => {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+                    listItem.innerHTML = `
+                        <div>
+                            <strong>${sale.seller}</strong> is selling 
+                            <span class="badge bg-primary">${sale.points} Points</span> 
+                            for <span class="text-success">${sale.price} KES</span>
+                        </div>
+                        <div>
+                            ${sale.is_own ? 
+                                `<button class="btn btn-danger btn-sm" onclick="cancelSale(${sale.id})">Cancel</button>` : 
+                                `<button class="btn btn-success btn-sm" onclick="buyPoints(${sale.id})">Buy</button>`}
+                        </div>
+                    `;
+
+
+                    listGroup.appendChild(listItem);
+                });
+                salesList.appendChild(listGroup);
+            } else {
+                salesList.innerHTML = '<p class="text-muted">No points are available for purchase at the moment.</p>';
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Handle "List for Sale" form submission
+    document.getElementById('sell-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        
+        fetch("{% url 'list_for_sale' %}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('sell-result').innerText = 'Your points have been listed for sale!';
+                updateAvailablePoints(); // Refresh the list of available points
+                event.target.reset(); // Clear the form
+            } else {
+                document.getElementById('sell-result-failed').innerText = data.error;
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+    // Initial calls to update data on page load
+    updateUserPointsAndNotifications();
+    updateAvailablePoints();
+
+    // Call the update functions every 10 seconds
+    setInterval(updateUserPointsAndNotifications, 30000);
+    setInterval(updateAvailablePoints, 10000);
+</script>
+
+<script>
+    // Function to buy points
+    function buyPoints(saleId) {
+        fetch("{% url 'buy_points' %}", {
+            method: 'POST',
+            body: JSON.stringify({ sale_id: saleId }),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Purchase successful!');
+                updateAvailablePoints(); // Refresh the list of available points
+                updateUserPointsAndNotifications(); // Update the buyer's points
+            } else {
+                alert(data.error);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Function to transfer points
+    document.getElementById('transfer-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+
+        fetch("{% url 'transfer_points' %}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('transfer-result').innerText = 'Points transferred successfully!';
+                updateUserPointsAndNotifications(); // Refresh the user's points and notifications
+                event.target.reset(); // Clear the form
+            } else {
+                document.getElementById('transfer-result-failed').innerText = data.error;
+                event.target.reset(); // Clear the form
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+<script>
+    // Function to cancel a sale
+    function cancelSale(saleId) {
+        fetch("{% url 'cancel_sale' %}", {
+            method: 'POST',
+            body: JSON.stringify({ sale_id: saleId }),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Sale canceled successfully.');
+                updateAvailablePoints(); // Refresh the list of available points
+            } else {
+                alert(data.error);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+<script>
+    function loadTransactionHistory() {
+    fetch('/p2p/history/')
+        .then(response => response.json())
+        .then(data => {
+            const historyList = document.getElementById('history-list');
+            historyList.innerHTML = '';
+
+            data.history.forEach(item => {
+                const listItem = document.createElement('div');
+                listItem.classList.add('list-group-item');
+                listItem.innerHTML = `
+                    <div>
+                        <strong>${item.transaction_type.toUpperCase()}</strong> - 
+                        <span class="badge bg-primary">${item.points} Points</span> 
+                        for <span class="text-success">${item.price} KES</span>
+                        <small class="text-muted">(${item.date}) with ${item.related_user}</small>
+                        <span class="badge ${item.status === 'Completed' ? 'bg-success' : item.status === 'Canceled' ? 'bg-danger' : 'bg-warning'}">${item.status}</span>
+                    </div>
+                `;
+                historyList.appendChild(listItem);
+            });
+        })
+        .catch(error => console.error('Error fetching history:', error));
+}
+
+// Load the history when the page loads
+document.addEventListener('DOMContentLoaded', loadTransactionHistory);
+
+</script>
+{% endblock %}

@@ -1,0 +1,211 @@
+{% extends 'b.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="container">
+      <div class="page-banner home-banner">
+        <div class="row align-items-center flex-wrap-reverse h-100">
+          <div class="col-md-6 py-5 wow fadeInLeft">
+            <h1 class="mb-4">We believe that real empowerment comes from action!</h1>
+            <p class="text-lg text-grey mb-5">We don’t just talk about change—we make it happen, together.</p>
+            <a href="{% url 'register' %}" class="btn btn-primary btn-split">Become a member</a>
+          </div>
+          <div class="col-md-6 py-5 wow zoomIn">
+            <div class="img-fluid text-center">
+              <img src="{% static '3.png' %}" height="100%" width="100%" alt="">
+            </div>
+          </div>
+        </div>
+        <a href="{% url 'about' %}" class="btn-scroll" data-role="smoothscroll"><span class="mai-arrow-down"></span></a>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="card-service wow fadeInUp">
+            <div class="header">
+              <img src="{% static '2.png' %}" height="100%" width="100%" alt="">
+            </div>
+            <div class="body">
+              <h5 class="text-secondary">The future belongs to those who are willing to shape it.</h5>
+              <p>Together, we can build a world where every young person has the opportunity to thrive, lead, and leave a lasting legacy.</p>
+              <a href="{% url 'register' %}" class="btn btn-primary">Become a Member</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="card-service wow fadeInUp">
+            <div class="header">
+              <img src="{% static 'community.webp' %}" height="100%" width="100%" alt="">
+            </div>
+            <div class="body">
+              <h5 class="text-secondary">Our strength lies in our community.</h5>
+              <p>This is a place where you can build lasting relationships, find your tribe, and be part of something bigger than yourself.</p>
+              <a href="{% url 'register' %}" class="btn btn-primary">Join Now</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="card-service wow fadeInUp">
+            <div class="header">
+              <img src="{% static '1.png' %}" height="100%" width="100%" alt="">
+            </div>
+            <div class="body">
+              <h5 class="text-secondary">Fueling Ambition with Resources</h5>
+              <p>We know that ambition alone isn’t enough to change the world—it needs to be fueled with the right resources, guidance, and support. </p>
+              <a href="{% url 'register' %}" class="btn btn-primary">Become a Member</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> <!-- .container -->
+  </div> <!-- .page-section -->
+
+  <div class="page-section" id="about">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 py-3 wow fadeInUp">
+          <span class="subhead">About us</span>
+          <h2 class="title-section">Our Mission</h2>
+          <div class="divider"></div>
+
+          <p>At Quepter Youth Hub, we are dedicated to empowering the next generation of innovators, leaders, and change-makers. </p>
+          <p>Our mission is to create a dynamic platform where young people can come together to exchange ideas, invest in transformative projects, and drive positive change within their communities.</p>
+          <p>We aim to equip our members with the tools, resources, and support they need to thrive both personally and professionally.</p>
+          <a href="{% url 'about' %}" class="btn btn-primary mt-3">Read More</a>
+        </div>
+        <div class="col-lg-6 py-3 wow fadeInRight">
+          <div class="img-fluid py-3 text-center">
+            <img src="{% static '29.jpg' %}" height="100%" width="100%" alt="">
+          </div>
+        </div>
+      </div>
+    </div> <!-- .container -->
+  </div> <!-- .page-section -->
+
+  <div class="page-section" id="about">
+   <div class="container">
+     <div class="row align-items-center">
+      <div class="col-lg-6 py-3 wow fadeInRight">
+         <div class="img-fluid py-3 text-center">
+           <img src="{% static 'logo-no-background.png' %}" height="100%" width="100%">
+         </div>
+       </div>
+       <div class="col-lg-6 py-3 wow fadeInUp">
+         <h2 class="title-section">Who we are</h2>
+         <div class="divider"></div>
+         <p>Quepter Youth Hub is more than just a platform—it’s a thriving community of young minds ready to make an impact. Founded with the belief that collaboration and mutual support are the keys to success, we bring together youths from diverse backgrounds and offer them the opportunity to connect, grow, and innovate. </p>
+         <p>Whether you’re an aspiring entrepreneur, a creative thinker, or someone passionate about making a difference, Quepter Youth Hub is your gateway to success.</p>
+         <a href="{% url 'about' %}" class="btn btn-primary mt-3">Read More</a>
+       </div>
+     </div>
+   </div> <!-- .container -->
+ </div> <!-- .page-section -->
+
+  <div class="page-section bg-light">
+    <div class="container">
+      <div class="text-center wow fadeInUp">
+        <div class="subhead">What We Do</div>
+        <h2 class="title-section"></h2>
+        <div class="divider mx-auto"></div>
+      </div>
+
+        <div class="row">
+          <div class="col-sm-6 col-lg-4 col-xl-3 py-3 wow zoomIn">
+            <div class="features">
+              <div class="header mb-3">
+                <img src="{% static 'project.png' %}" height="100%" width="100%" alt="">
+              </div>
+              <h5>Project Innovation</h5>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-4 col-xl-3 py-3 wow zoomIn">
+            <div class="features">
+              <div class="header mb-3">
+                <img src="{% static 'community.png' %}" height="100%" width="100%" alt="">
+              </div>
+              <h5>Community Building</h5>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-4 col-xl-3 py-3 wow zoomIn">
+            <div class="features">
+              <div class="header mb-3">
+                <img src="{% static 'growth.png' %}" height="100%" width="100%" alt="">
+              </div>
+              <h5>Growth Opportunities</h5>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-4 col-xl-3 py-3 wow zoomIn">
+            <div class="features">
+              <div class="header mb-3">
+                <img src="{% static 'leadership.png' %}" height="100%" width="100%" alt="">
+              </div>
+              <h5>Leadership and Participation</h5>
+            </div>
+          </div>
+        </div>
+
+    </div> <!-- .container -->
+  </div> <!-- .page-section -->
+
+  <!--div class="page-section banner-seo-check" style="background-color: #f5f5f5; padding: 50px 0;">
+    <div class="wrap bg-image" style="background-image: url({% static 'img/bg_pattern.svg' %}); background-size: cover;">
+        <div class="container text-center">
+            <div class="row justify-content-center wow fadeInUp">
+                <div class="col-lg-8">
+                    <h2 class="mb-4" style="color: #2c3e50; font-weight: bold;">Support Our Youth Empowerment Initiatives</h2>
+                    <p style="color: #34495e; font-size: 18px; line-height: 1.6;">
+                        Your contributions directly empower young innovators, create jobs, and support community-driven projects.
+                        Every donation helps us turn ideas into reality, fostering growth and opportunity for all.
+                        <br><br>
+                        Thank you for making a difference!
+                    </p>
+
+                    
+                    <a href="{% url 'donate' %}" class="btn btn-block btn-success" 
+                        style="font-size: 18px; padding: 12px 20px; background-color: #28a745; border-color: #28a745; color: white; text-transform: uppercase; letter-spacing: 1px;">
+                        Contribute
+                    </a>
+                </div>
+            </div>
+        </div> 
+    </div> 
+</div--> <!-- .page-section -->
+
+
+  <!-- Blog -->
+  <div class="page-section">
+    <div class="container">
+      <div class="text-center wow fadeInUp">
+        <div class="subhead">Our Blog</div>
+        <h2 class="title-section">Read Latest News</h2>
+        <div class="divider mx-auto"></div>
+      </div>
+
+      <div class="row mt-5">
+         {% for blog in blogs %}
+        <div class="col-lg-4 py-3 wow fadeInUp">
+          <div class="card-blog">
+            <div class="header">
+              <div class="post-thumb">
+                <img src="{{blog.image.url}}" alt="">
+              </div>
+            </div>
+            <div class="body">
+              <h5 class="post-title"><a href="#">{{blog.title}}</a></h5>
+              <div class="post-date">Posted on <a href="#">{{blog.timestamp}}</a></div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        
+        <div class="col-12 mt-4 text-center wow fadeInUp">
+          <a href="{% url 'blog' %}" class="btn btn-primary">View More</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

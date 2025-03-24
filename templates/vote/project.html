@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Vote for Your Favorite Project | Quepter Youth Hub{% endblock title %}
+{% block content %}
+
+<style>
+    .vote-section {
+        background: linear-gradient(135deg, #1f3c88, #f46b45);
+        padding: 50px 30px;
+        border-radius: 12px;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .vote-title {
+        font-size: 2.5rem;
+        color: #fff;
+        margin-bottom: 20px;
+    }
+
+    .vote-description {
+        font-size: 1.2rem;
+        color: #f1f1f1;
+        margin-bottom: 40px;
+    }
+
+    .vote-button {
+        background-color: #28a745;
+        color: #fff;
+        padding: 12px 20px;
+        font-size: 1.2rem;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .vote-button:hover {
+        background-color: #218838;
+    }
+
+    .votes-display {
+        font-size: 1.5rem;
+        margin-top: 20px;
+        color: #fff;
+    }
+
+    .alert {
+        margin-top: 20px;
+        font-size: 1.1rem;
+    }
+</style>
+
+<div class="container">
+    <div class="vote-section">
+        <h1 class="vote-title">Vote for "{{ project.title }}"</h1>
+        <p class="vote-description">Support your favorite project by casting your vote! Every vote counts and brings this project closer to success.</p>
+        <button id="voteBtn" class="vote-button">Vote Now</button>
+        <div class="votes-display">Total Votes: <span id="voteCount">{{ project.votes }}</span></div>
+        <div id="voteStatus"></div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const voteBtn = document.getElementById('voteBtn');
+        const voteCount = document.getElementById('voteCount');
+        const voteStatus = document.getElementById('voteStatus');
+
+        voteBtn.addEventListener('click', function () {
+            fetch('{% url "vote_project" project.uuid %}', {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    vote: true
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    voteCount.textContent = data.total_votes;
+                    voteStatus.innerHTML = '<div class="alert alert-success">Thank you for your vote!</div>';
+                } else {
+                    voteStatus.innerHTML = '<div class="alert alert-danger">' + data.message + '</div>';
+                }
+            })
+            .catch(error => {
+                voteStatus.innerHTML = '<div class="alert alert-danger">An error occurred. Please try again later.</div>';
+            });
+        });
+    });
+</script>
+
+{% endblock content %}

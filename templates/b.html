@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="copyright" content="MACode ID, https://macodeid.com/">
+
+  <title>Quepter DAO – Decentralized Youth Empowerment Hub</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'q.jpeg' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'quepter-bgless.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'q.jpeg' %}">
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'quepter-bgless.png' %}">
+  <meta name="msapplication-TileImage" content="{% static 'quepter-bgless.png' %}">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="stylesheet" href="{% static 'landing/assets/css/maicons.css' %}">
+  <link rel="stylesheet" href="{% static 'landing/assets/css/bootstrap.css' %}">
+  <link rel="stylesheet" href="{% static 'landing/assets/vendor/animate/animate.css' %}">
+  <link rel="stylesheet" href="{% static 'landing/assets/css/theme.css' %}">
+
+</head>
+<body>
+
+  <!-- Back to top button -->
+  <div class="back-to-top"></div>
+
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky" data-offset="500">
+      <div class="container">
+        <a href="{% url 'home' %}" class="navbar-brand">Quepter<span class="text-primary">Youth Hub.</span></a>
+
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse collapse" id="navbarContent">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'about' %}">About</a>
+            </li>
+            <!--li class="nav-item">
+              <a class="nav-link" href="{% url 'blog' %}">Blog</a>
+            </li-->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+            </li>
+            <!--li class="nav-item">
+              <a class="nav-link" href="{% url 'donate' %}">Contribute</a>
+            </li-->
+            <li class="nav-item">
+              <a class="btn btn-primary ml-lg-2" href="{% url 'login' %}">Login</a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </nav>
+
+    {% block content %}
+
+    {% endblock content %}
+
+
+     
+
+ <footer class="page-footer bg-image" style="background-image: url({% static 'landing/assets/img/world_pattern.svg' %});">
+    <div class="container">
+      <div class="row mb-5">
+        <div class="col-lg-3 py-3">
+          <h3>QUEPTER</h3>
+          <p>Together, we can build a world where every young person has the opportunity to thrive, lead, and leave a lasting legacy.</p>
+  
+          <div class="social-media-button">
+            <a href="#"><span class="mai-logo-facebook-f"></span></a>
+            <a href="#"><span class="mai-logo-twitter"></span></a>
+            <a href="#"><span class="mai-logo-google-plus-g"></span></a>
+            <a href="#"><span class="mai-logo-instagram"></span></a>
+            <a href="#"><span class="mai-logo-youtube"></span></a>
+          </div>
+        </div>
+        <div class="col-lg-3 py-3">
+          <h5>Quepter</h5>
+          <ul class="footer-menu">
+            <li><a href="{% url 'about' %}">About Us</a></li>
+            <li><a href="{% url 'contact' %}">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 py-3">
+          <h5>Contact Us</h5>
+          <p>Nakuru-Kenya</p>
+          <a href="#" class="footer-link">+254706889399</a>
+          <a href="#" class="footer-link">info@quepter.co.ke</a>
+        </div>
+        <div class="col-lg-3 py-3">
+          <h5>Newsletter</h5>
+          <p>Get updates, news or events on your mail.</p>
+          <form action="#">
+            <input type="text" class="form-control" placeholder="Enter your email..">
+            <button type="submit" class="btn btn-success btn-block mt-2">Subscribe</button>
+          </form>
+        </div>
+      </div>
+  
+      <p class="text-center" id="copyright">Copyright &copy; 2024. <a href="https://quepter.co.ke/" target="_blank">Quepter</a></p>
+    </div>
+  </footer>
+  
+  <script src="{% static 'landing/assets/js/jquery-3.5.1.min.js' %}"></script>
+  <script src="{% static 'landing/assets/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'landing/assets/js/google-maps.js' %}"></script>
+  <script src="{% static 'landing/assets/vendor/wow/wow.min.js' %}"></script>
+  <script src="{% static 'landing/assets/js/theme.js' %}"></script>
+  
+  </body>
+  </html>

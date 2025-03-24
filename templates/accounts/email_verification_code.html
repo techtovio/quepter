@@ -1,0 +1,45 @@
+<!-- email_verification_code.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Verification Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            background-color: #f7f7f7;
+            border-radius: 8px;
+        }
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .code {
+            font-size: 32px;
+            color: #4CAF50;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .footer {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p class="header">Welcome to Quepter Youth Hub!</p>
+        <p>Thank you for joining us! To complete your registration and verify your account, please use the code below:</p>
+        <div class="code">{{ verification_code }}</div>
+        <p>Simply enter this code on the verification page to activate your account.</p>
+        <p class="footer">If you did not request this code, please ignore this email or contact support.</p>
+        <p class="footer">Best regards,<br>The Quepter Youth Hub Team</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,699 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="/assets/"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+
+    <title>{% block title %}Dashboard - Quepter{% endblock title %}</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'quepter-bgless.png' %}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'q.jpeg' %}">
+      <link rel="icon" type="image/png" sizes="32x32" href="{% static 'quepter-bgless.png' %}">
+      <link rel="icon" type="image/png" sizes="16x16" href="{% static 'q.jpeg' %}">
+      <link rel="shortcut icon" type="image/x-icon" href="{% static 'quepter-bgless.png' %}">
+      <meta name="msapplication-TileImage" content="{% static 'quepter-bgless.png' %}">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link  href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"  rel="stylesheet"/>
+
+    <!-- Icons. Uncomment required icon fonts -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/fonts/boxicons.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/vendor/css/core.css' %}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{% static 'assets/vendor/css/theme-default.css' %}" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{% static 'assets/css/demo.css' %}" />
+    <link rel="stylesheet" href="{% static 'jquery.dataTables.min.css' %}">
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/vendor/libs/apex-charts/apex-charts.css' %}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+
+
+    <!-- Page CSS -->
+     <style>
+      /* Fixed bottom navbar */
+      .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: #fff;
+        border-top: 1px solid #dee2e6;
+        z-index: 1030;
+        display: none;
+      }
+     </style>
+     {% block style %}{% endblock style %}
+
+    <!-- Helpers -->
+    <script src="{% static 'assets/vendor/js/helpers.js' %}"></script>
+
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="{% static 'assets/js/config.js' %}"></script>
+  </head>
+
+  <body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Menu -->
+
+        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+          <div class="app-brand demo">
+            <a href="{% url 'dashboard' %}" class="app-brand-link">
+              <span class="app-brand-logo demo">
+                <svg
+                  width="25"
+                  viewBox="0 0 25 42"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                >
+                  <defs>
+                    <path
+                      d="M13.7918663,0.358365126 L3.39788168,7.44174259 C0.566865006,9.69408886 -0.379795268,12.4788597 0.557900856,15.7960551 C0.68998853,16.2305145 1.09562888,17.7872135 3.12357076,19.2293357 C3.8146334,19.7207684 5.32369333,20.3834223 7.65075054,21.2172976 L7.59773219,21.2525164 L2.63468769,24.5493413 C0.445452254,26.3002124 0.0884951797,28.5083815 1.56381646,31.1738486 C2.83770406,32.8170431 5.20850219,33.2640127 7.09180128,32.5391577 C8.347334,32.0559211 11.4559176,30.0011079 16.4175519,26.3747182 C18.0338572,24.4997857 18.6973423,22.4544883 18.4080071,20.2388261 C17.963753,17.5346866 16.1776345,15.5799961 13.0496516,14.3747546 L10.9194936,13.4715819 L18.6192054,7.984237 L13.7918663,0.358365126 Z"
+                      id="path-1"
+                    ></path>
+                    <path
+                      d="M5.47320593,6.00457225 C4.05321814,8.216144 4.36334763,10.0722806 6.40359441,11.5729822 C8.61520715,12.571656 10.0999176,13.2171421 10.8577257,13.5094407 L15.5088241,14.433041 L18.6192054,7.984237 C15.5364148,3.11535317 13.9273018,0.573395879 13.7918663,0.358365126 C13.5790555,0.511491653 10.8061687,2.3935607 5.47320593,6.00457225 Z"
+                      id="path-3"
+                    ></path>
+                    <path
+                      d="M7.50063644,21.2294429 L12.3234468,23.3159332 C14.1688022,24.7579751 14.397098,26.4880487 13.008334,28.506154 C11.6195701,30.5242593 10.3099883,31.790241 9.07958868,32.3040991 C5.78142938,33.4346997 4.13234973,34 4.13234973,34 C4.13234973,34 2.75489982,33.0538207 2.37032616e-14,31.1614621 C-0.55822714,27.8186216 -0.55822714,26.0572515 -4.05231404e-15,25.8773518 C0.83734071,25.6075023 2.77988457,22.8248993 3.3049379,22.52991 C3.65497346,22.3332504 5.05353963,21.8997614 7.50063644,21.2294429 Z"
+                      id="path-4"
+                    ></path>
+                    <path
+                      d="M20.6,7.13333333 L25.6,13.8 C26.2627417,14.6836556 26.0836556,15.9372583 25.2,16.6 C24.8538077,16.8596443 24.4327404,17 24,17 L14,17 C12.8954305,17 12,16.1045695 12,15 C12,14.5672596 12.1403557,14.1461923 12.4,13.8 L17.4,7.13333333 C18.0627417,6.24967773 19.3163444,6.07059163 20.2,6.73333333 C20.3516113,6.84704183 20.4862915,6.981722 20.6,7.13333333 Z"
+                      id="path-5"
+                    ></path>
+                  </defs>
+                </svg>
+              </span>
+              <span class="app-brand-text demo menu-text fw-bolder ms-2">Quepter</span>
+            </a>
+
+            <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+              <i class="bx bx-chevron-left bx-sm align-middle"></i>
+            </a>
+          </div>
+
+          <div class="menu-inner-shadow"></div>
+
+          <ul class="menu-inner py-1">
+            <!-- Dashboard -->
+            <li class="menu-item active">
+              <a href="{% url 'dashboard' %}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <div data-i18n="Analytics">Dashboard</div>
+              </a>
+            </li>
+            <li class="menu-header small text-uppercase">
+              <span class="menu-header-text">Pages</span>
+            </li>
+            <li class="menu-item active">
+              <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-user"></i>
+                <div data-i18n="Account Settings">Profile Management</div>
+              </a>
+              <ul class="menu-sub">
+                <li class="menu-item">
+                  <a href="{% url 'profile' %}" class="menu-link">
+                    <div data-i18n="Account">Account</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="{% url 'notification-settings' %}" class="menu-link">
+                    <div data-i18n="Notifications">Notifications</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="{% url 'connection-settings' %}" class="menu-link">
+                    <div data-i18n="Connections">Connections</div>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="menu-item active">
+              <a href="{% url 'p2p' %}"  class="menu-link"><!--data-bs-toggle="modal" data-bs-target="#CrowdFunding"-->
+                <i class="menu-icon tf-icons bx bx-transfer-alt"></i>
+                <div data-i18n="Tables">P2P</div>
+              </a>
+            </li>
+
+            <li class="menu-item active">
+              <a href="{% url 'investment_opportunities' %}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-donate-heart"></i>
+                <div data-i18n="Boxicons">Funding</div>
+              </a>
+            </li>
+
+            <li class="menu-item active">
+              <a href="{% url 'projects' %}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-trophy"></i>
+                <div data-i18n="Boxicons">Projects</div>
+              </a>
+            </li>
+
+            <li class="menu-item active">
+              <a href="{% url 'leadership' %}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-select-multiple"></i>
+                <div data-i18n="Tables">Voting & Leadership</div>
+              </a>
+            </li>
+
+            <li class="menu-item active">
+              <a href="{% url 'club_list' %}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-shape-polygon"></i>
+                <div data-i18n="Tables">Clubs</div>
+              </a>
+            </li>
+
+            <li class="menu-item active">
+              <a href="{% url 'learning_resources' %}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-book"></i>
+                <div data-i18n="Tables">Learning Resources</div>
+              </a>
+            </li>
+
+            <li class="menu-item active">
+              <a href="{% url 'faqs' %}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-question-mark"></i>
+                <div data-i18n="Tables">FAQS</div>
+              </a>
+            </li>
+
+            <li class="menu-item active">
+              <a href="/static/quepter.apk" class="menu-link">
+                <i class="menu-icon bx bxl-android"></i>
+                <div data-i18n="Tables">App</div>
+              </a>
+            </li>
+
+            {% if user.profile.is_admin %}
+            <li class="menu-item active">
+              <a href="{% url 'administration' %}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-shield"></i>
+                <div data-i18n="Support">Admin</div>
+              </a>
+            </li>
+            <li class="menu-item active">
+              <a href="https://quepter.co.ke/oauth/admin" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-shield"></i>
+                <div data-i18n="Support">Admin 0</div>
+              </a>
+            </li>
+            {% endif %}
+            
+          </ul>
+        </aside>
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Navbar -->
+
+          <nav
+            class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+            id="layout-navbar"
+          >
+            <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+              <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+                <i class="bx bx-menu bx-sm"></i>
+              </a>
+            </div>
+
+            <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+              <ul class="navbar-nav flex-row align-items-center ms-auto">
+                <!-- Place this tag where you want the button to render. -->
+                <li class="nav-item lh-1 me-3">
+                  <a class="nav-item" href="" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNot" aria-controls="offcanvasNot" data-size="large" data-show-count="true"><i class="bx bx-bell bx-sm"></i>
+                    <sub><span class="flex-shrink-0 badge badge-center rounded-pill bg-info w-px-20 h-px-20">{{user.profile.notifications}}</span></sub>
+                  </a> 
+                </li>
+                <!--li class="nav-item lh-1 me-3">
+                  <a class="nav-item" href="" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMessages" aria-controls="offcanvasMessages" data-size="large" data-show-count="true"><i class="bx bx-message bx-sm"></i></a> 
+                </li-->
+
+                <!-- User -->
+                <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                  <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                      {% if user.profile.image %}
+                      <img src="{{user.profile.image.url}}" alt class="w-px-40 h-auto rounded-circle" />
+                      {% else %}
+                      <img src="{% static 'person.webp' %}" alt class="w-px-40 h-auto rounded-circle" />
+                      {% endif %}
+                    </div>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <a class="dropdown-item" href="#">
+                        <div class="d-flex">
+                          <div class="flex-shrink-0 me-3">
+                            <div class="avatar avatar-online">
+                              {% if user.profile.image %}
+                              <img src="{{user.profile.image.url}}" alt class="w-px-40 h-auto rounded-circle" height="100%" width="100%"/>
+                              {% else %}
+                              <img src="{% static 'person.webp' %}" alt class="w-px-40 h-auto rounded-circle" />
+                              {% endif %}
+                            </div>
+                          </div>
+                          <div class="flex-grow-1">
+                            <span class="fw-semibold d-block">{{user.first_name}}</span>
+                            <small class="text-muted">Member</small>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{% url 'profile' %}">
+                        <i class="bx bx-user me-2"></i>
+                        <span class="align-middle">My Profile</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="#">
+                        <i class="bx bx-cog me-2"></i>
+                        <span class="align-middle">Settings</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNot" aria-controls="offcanvasNot">
+                        <span class="d-flex align-items-center align-middle">
+                          <i class="flex-shrink-0 bx bx-notifications me-2"></i>
+                          <span class="flex-grow-1 align-middle">Notifications</span>
+                          <span class="flex-shrink-0 badge badge-center rounded-pill bg-danger w-px-20 h-px-20">{{user.profile.notifications}}</span>
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{% url 'logout' %}">
+                        <i class="bx bx-power-off me-2"></i>
+                        <span class="align-middle">Log Out</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <!--/ User -->
+              </ul>
+            </div>
+          </nav>
+
+          <!-- / Navbar -->
+
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <div class="row">
+                {% include 'partials/_messages.html' %}
+                {% block content %}
+                {% endblock content %}
+              </div>
+            </div>
+            <!-- / Content -->
+
+            <!-- Footer -->
+            <footer class="content-footer footer bg-footer-theme">
+              <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+                <div class="mb-2 mb-md-0">
+                  ©
+                  <script>
+                    document.write(new Date().getFullYear());
+                  </script>
+                  , Quepter
+                </div>
+              </div>
+            </footer>
+            <!-- / Footer -->
+
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+      </div>
+
+      <!-- Overlay -->
+      <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+
+    <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasMessages" aria-labelledby="offcanvasMessagesLabel">
+      <div class="offcanvas-header">
+        <h5 id="offcanvasMessagesLabel" class="offcanvas-title">Messages</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <p class="text-center">
+          
+        </p>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100">Continue</button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas">Cancel</button>
+      </div>
+    </div>
+
+
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNot" aria-labelledby="offcanvasNot">
+      <div class="offcanvas-header">
+        <h5 id="offcanvasNot" class="offcanvas-title">Notifications</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+          {% for notification in notifications %}
+          <div class="col-md-12 col-xl-12">
+            <div class="card bg-secondary text-white mb-3">
+              <div class="card-header">{{notification.title}}</div>
+              <div class="card-body">
+                <p class="card-text">{{notification.message}}</p>
+                <small class="text-muted text-sm-left text-white">{{notification.timestamp}}</small>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% if notifications %}
+        <a href="{% url 'clear_notif' %}" class="btn btn-primary mb-2 d-grid w-100">Clear Notifications</a>
+        {% endif %}
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas">Close</button>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="createPost" tabindex="-1" aria-hidden="true" style="display: none">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="createPost">Create a Post</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form action="{% url 'create-post' %}" method="post">
+              {% csrf_token %}
+              <div class="row">
+                <div class="col mb-12">
+                  <label for="nameWithTitle" class="form-label">Title</label>
+                  <input type="text" id="nameWithTitle" class="form-control" placeholder="Enter the title of your post" name="title"/>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col mb-12">
+                  <label for="commentTextArea" class="form-label">Add your Comment</label>
+                    <textarea class="form-control" id="commentTextArea" rows="3" name="content"></textarea>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col mb-12">
+                  <label for="categorySelect" class="form-label">Select Category</label>
+                  <select id="categorySelect" class="form-control" name="category" required>
+                    <option value="">Select post Category ..</option>
+                    <option value="education">Education & Learning</option>
+                    <option value="business">Business & Entrepreneurship</option>
+                    <option value="technology">Technology & Innovation</option>
+                    <option value="creative">Creative Arts & Media</option>
+                    <option value="health">Health & Wellness</option>
+                    <option value="sports">Sports & Recreation</option>
+                    <option value="finance">Finance & Investment</option>
+                    <option value="social">Social Impact & Community Service</option>
+                    <option value="environment">Environment & Sustainability</option>
+                  </select>
+                </div>
+              </div>
+              <br>
+              <button type="submit" class="btn btn-info btn-block">Post</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="CrowdFunding" tabindex="-1" aria-hidden="true" style="display: none">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="CrowdFunding">Crowd Funding</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row align-items-center align-middle text-center">
+              <img src="{% static 'mpesa.webp' %}" height="150px" width="100%" alt="">
+            </div>
+            <form action="{% url 'member_funding' %}" method="post">
+              {% csrf_token %}
+              <div class="row">
+                <div class="col mb-12">
+                  <label for="nameWithTitle" class="form-label">Phone Number</label>
+                  <input type="tel" id="nameWithTitle" class="form-control" placeholder="Phone Number To pay" name="tel"/>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="input-group">
+                  <span class="input-group-text">kes</span>
+                  <input type="number" class="form-control" placeholder="Amount" name="amount" aria-label="Amount in Ksh"/>
+                  <span class="input-group-text">.00</span>
+                </div>
+              </div>
+              <br>
+              <button type="submit" class="btn btn-primary btn-block">Complete Payment</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="AddFunds" tabindex="-1" aria-hidden="true" style="display: none">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="AddFunds">Add Funds</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row align-items-center align-middle text-center">
+              <img src="{% static 'mpesa.webp' %}" height="150px" width="100%" alt="">
+            </div>
+            <form action="{% url 'pay_mpesa' %}" method="post">
+              {% csrf_token %}
+              <div class="row">
+                <div class="col mb-12">
+                  <label for="nameWithTitle" class="form-label">Phone Number</label>
+                  <input type="tel" id="nameWithTitle" class="form-control" placeholder="Phone Number To pay" name="tel"/>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="input-group">
+                  <span class="input-group-text">kes</span>
+                  <input type="number" class="form-control" placeholder="Amount" name="amount" aria-label="Amount in Ksh"/>
+                  <span class="input-group-text">.00</span>
+                </div>
+              </div>
+              <br>
+              <button type="submit" class="btn btn-success btn-block">Complete Payment</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="WithdrawFunds" tabindex="-1" aria-hidden="true" style="display: none">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="WithdrawFunds">Withdraw Funds to {{user.profile.phone_no}}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row align-items-center align-middle text-center">
+              <img src="{% static 'mpesa.webp' %}" height="150px" width="100%" alt="">
+            </div>
+            <form action="{% url 'withdraw_funds' %}" method="post">
+              {% csrf_token %}
+              <div class="row">
+                <div class="input-group">
+                  <span class="input-group-text">kes</span>
+                  <input type="number" class="form-control" placeholder="Amount" name="amount" aria-label="Amount in Ksh"/>
+                  <span class="input-group-text">.00</span>
+                </div>
+              </div>
+              <br>
+              <button type="submit" class="btn btn-success btn-block">Request Withdrawal</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transaction History Modal -->
+    <div class="modal fade" id="transactionHistoryModal" tabindex="-1" aria-labelledby="transactionHistoryModalLabel" style="display: none" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="transactionHistoryModalLabel">Transaction History</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  {% if transactions %}
+                  <div class="table-responsive text-nowrap">
+                      <table class="table table-striped ">
+                          <thead>
+                              <tr>
+                                  <th>Type</th>
+                                  <th>Amount</th>
+                                  <th>Status</th>
+                                  <th>Reference</th>
+                                  <th>Date</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% for transaction in transactions %}
+                                  <tr>
+                                      <td>{{ transaction.get_type_display }}</td>
+                                      <td>{{ transaction.amount }}</td>
+                                      <td>{% if transaction.get_status_display == "Pending" %}<span class="badge bg-label-warning me-1">Pending</span>{% elif transaction.get_status_display == "Completed" %}<span class="badge bg-label-success me-1">Completed</span>{% else %}<span class="badge bg-label-danger me-1">Cancelled</span>{% endif %}</td>
+                                      <td>{{ transaction.reference }}</td>
+                                      <td>{{ transaction.timestamp|date:"Y-m-d H:i" }}</td>
+                                  </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                    </div>
+                  {% else %}
+                      <p class="text-center">No transactions found.</p>
+                  {% endif %}
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <!-- Bottom Navigation Bar -->
+<div class="bottom-nav py-2">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col">
+        <a href="{% url 'p2p' %}" class="text-decoration-none text-primary">
+          <i class="bi bi-currency-exchange" style="font-size: 1.5rem;"></i><br>
+          P2P
+        </a>
+      </div>
+      <div class="col">
+        <a href="{% url 'dashboard' %}" class="text-decoration-none text-primary">
+          <i class="bi bi-house-door" style="font-size: 1.5rem;"></i><br>
+          Home
+        </a>
+      </div>
+      <div class="col">
+        <a href="{% url 'projects' %}" class="text-decoration-none text-primary">
+          <i class="bi bi-briefcase" style="font-size: 1.5rem;"></i><br>
+          Projects
+        </a>
+      </div>
+      <div class="col">
+        <a href="{% url 'club_list' %}" class="text-decoration-none text-primary">
+          <i class="bi bi-people" style="font-size: 1.5rem;"></i><br>
+          Clubs
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register("{% static 'js/sw.js' %}", { scope: '/' })
+    .then(registration => {
+      console.log('ServiceWorker registration successful');
+    })
+    .catch(err => {
+      console.log('ServiceWorker registration failed:', err);
+    });
+}
+</script>
+<script>
+  function checkDevice() {
+      // Get the screen width
+      var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+      // Show menu icons only on smartphones (devices with width <= 768px)
+      if (width <= 768) {
+          document.querySelector('.bottom-nav').style.display = 'flex';
+      } else {
+          document.querySelector('.bottom-nav').style.display = 'none';
+      }
+  }
+
+  // Run check on load and on window resize
+  window.onload = checkDevice;
+  window.onresize = checkDevice;
+</script>
+
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+    <script src="{% static 'assets/vendor/libs/jquery/jquery.js' %}"></script>
+    <script src="{% static 'assets/vendor/libs/popper/popper.js' %}"></script>
+    <script src="{% static 'assets/vendor/js/bootstrap.js' %}"></script>
+    <script src="{% static 'assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
+    <script src="{% static 'assets/vendor/js/menu.js' %}"></script>
+    <script src="{% static 'assets/vendor/libs/apex-charts/apexcharts.js' %}"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+    <script src="{% static 'assets/js/dashboards-analytics.js' %}"></script>
+    <script src="{% static 'assets/js/ui-modals.js' %}"></script>
+    <script src="{% static 'ajax.js' %}"></script>
+    <script src="{% static 'assets/js/ui-popover.js' %}"></script>
+    <script src="{% static 'jquery.dataTables.min.js' %}"></script>
+
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+  </body>
+</html>

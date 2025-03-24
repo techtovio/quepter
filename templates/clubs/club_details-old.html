@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}{{club.name}}{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2 class="text-center">{{ club.name }}</h2>
+            <img src="{{ club.image.url }}" alt="{{ club.name }}" class="img-fluid rounded my-3">
+            <p>{{ club.description }}</p>
+            <h5>Category: <span class="badge bg-secondary">{{ club.get_category_display }}</span></h5>
+            <h5>Terms & Conditions:</h5>
+            <p>{{ club.terms_and_conditions }}</p>
+            
+            {% if not is_member %}
+                <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#joinClubModal">
+                    Join Club (KES 100)
+                </button>
+            {% else %}
+                <h5 class="mt-4">Recent Broadcasts</h5>
+                <div class="list-group">
+                    {% for broadcast in broadcasts %}
+                        <div class="list-group-item">
+                            <p class="mb-1">{{ broadcast.message }}</p>
+                            <small class="text-muted">Sent on {{ broadcast.date_sent|date:"M d, Y h:i A" }}</small>
+                        </div>
+                    {% empty %}
+                        <p class="text-center text-muted">No broadcasts yet for this club.</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Join Club Confirmation Modal -->
+<div class="modal fade" id="joinClubModal" tabindex="-1" aria-labelledby="joinClubModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="joinClubModalLabel">Join {{ club.name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to join this club for a one-time fee of KES 100? Your account will be charged, and this action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <form method="POST" action="{% url 'join_club' club.uuid %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Yes, Join</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

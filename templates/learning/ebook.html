@@ -1,0 +1,26 @@
+<!-- ebooks_list.html -->
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Learning Resources{% endblock title %}
+{% block content %}
+<div class="container">
+    <h2>Ebooks Collection</h2>
+    <div class="row">
+        {% for ebook in ebooks %}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ ebook.title }}</h5>
+                    <p class="card-text">{{ ebook.description|truncatewords:20 }}</p>
+                    {% if ebook.is_free %}
+                        <a href="{% url 'view_ebook' ebook.uuid %}" class="btn btn-primary">Read Now</a>
+                    {% else %}
+                        <a href="{% url 'view_ebook' ebook.uuid %}" class="btn btn-primary">Buy Now</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

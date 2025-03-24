@@ -1,0 +1,467 @@
+{% extends 'base.html' %}
+{% block title %}FAQS{% endblock title %}
+
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="col-md mb-4 mb-md-0">
+
+      <div class="accordion mt-3" id="accordionExample">
+        <div class="card accordion-item active">
+          <h2 class="accordion-header" id="headingOne">
+            <button type="button" class="accordion-button bg-success" data-bs-toggle="collapse" data-bs-target="#accordionOne" aria-expanded="false" aria-controls="accordionOne" >
+              Earning and Managing Points
+            </button>
+          </h2>
+          <div id="accordionOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+            <div class="container mt-5">
+              <h2 class="mb-4">Earning and Managing Points FAQs</h2>
+              <div class="accordion" id="pointsFaqAccordion">
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="pointsFaqHeading1">
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#pointsFaq1" aria-expanded="true" aria-controls="pointsFaq1">
+                              How can I earn points on Quepter Youth Hub?
+                          </button>
+                      </h2>
+                      <div id="pointsFaq1" class="accordion-collapse collapse" aria-labelledby="pointsFaqHeading1" data-bs-parent="#pointsFaqAccordion">
+                          <div class="accordion-body">
+                              Members can earn points through various activities on the platform, including:
+                              <ul>
+                                  <li><strong>Inviting other members:</strong> Each successful invite earns you <strong>2 points</strong>, and the invited member receives <strong>0.5 points</strong>.</li>
+                                  <li><strong>Engagements on posts:</strong> For every <strong>100 likes</strong> on your posts in the community forums, you earn <strong>1 point</strong>.</li>
+                                  <li><strong>Club Weekly Funding:</strong> For every <strong>KES 10</strong> contributed to club funding, you earn <strong>1 point</strong>.</li>
+                                  <li><strong>Downloads of your Ebook:</strong> Each download of your uploaded ebook earns you <strong>10 points</strong>.</li>
+                                  <li><strong>Engaging with Promoted Social Media Accounts:</strong> The points you earn depend on the <strong>promotion amount</strong> associated with each account.</li>
+                                  <li><strong>Participating in Leaderboard Tasks:</strong> The points you earn depend on the <strong>Task</strong> and the rewards amount.</li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+                
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="pointsFaqHeading2">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pointsFaq2" aria-expanded="false" aria-controls="pointsFaq2">
+                              How can I transfer points to other members?
+                          </button>
+                      </h2>
+                      <div id="pointsFaq2" class="accordion-collapse collapse" aria-labelledby="pointsFaqHeading2" data-bs-parent="#pointsFaqAccordion">
+                          <div class="accordion-body">
+                              You can transfer points to other members through the <strong>P2P Section</strong>. To do so, you need the <strong>Profile ID</strong> of the member you want to send points to. This ID can be found in the Profile section under "Accounts."
+                          </div>
+                      </div>
+                  </div>
+                
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="pointsFaqHeading3">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pointsFaq3" aria-expanded="false" aria-controls="pointsFaq3">
+                              Can I buy points on Quepter Youth Hub?
+                          </button>
+                      </h2>
+                      <div id="pointsFaq3" class="accordion-collapse collapse" aria-labelledby="pointsFaqHeading3" data-bs-parent="#pointsFaqAccordion">
+                          <div class="accordion-body">
+                              Yes, you can purchase points on the platform. The rate is <strong>KES 10 per point</strong>. The option to buy points is available in your profile's "Accounts" section.
+                          </div>
+                      </div>
+                  </div>
+                
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="pointsFaqHeading4">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pointsFaq4" aria-expanded="false" aria-controls="pointsFaq4">
+                              How can I sell my accumulated points to other members?
+                          </button>
+                      </h2>
+                      <div id="pointsFaq4" class="accordion-collapse collapse" aria-labelledby="pointsFaqHeading4" data-bs-parent="#pointsFaqAccordion">
+                          <div class="accordion-body">
+                              You can list your accumulated points for sale in the <strong>P2P Section</strong>. A minimum of <strong>10 points</strong> is required to list your points for sale, and a service fee of <strong>1 point</strong> will be deducted for every <strong>10 points</strong> listed.
+                          </div>
+                      </div>
+                  </div>
+                
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="pointsFaqHeading5">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pointsFaq5" aria-expanded="false" aria-controls="pointsFaq5">
+                              How do I find my Profile ID to receive points from others?
+                          </button>
+                      </h2>
+                      <div id="pointsFaq5" class="accordion-collapse collapse" aria-labelledby="pointsFaqHeading5" data-bs-parent="#pointsFaqAccordion">
+                          <div class="accordion-body">
+                              Your <strong>Profile ID</strong> is available in the "Profile" section under "Accounts." Share this ID with other members who wish to send you points.
+                          </div>
+                      </div>
+                  </div>
+                
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="pointsFaqHeading6">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pointsFaq6" aria-expanded="false" aria-controls="pointsFaq6">
+                              How is the point conversion rate calculated for Club Weekly Funding?
+                          </button>
+                      </h2>
+                      <div id="pointsFaq6" class="accordion-collapse collapse" aria-labelledby="pointsFaqHeading6" data-bs-parent="#pointsFaqAccordion">
+                          <div class="accordion-body">
+                              For every <strong>KES 10</strong> contributed to the Club Weekly Funding, you earn <strong>1 point</strong>. The more you contribute, the more points you accumulate, which can be used towards proposing projects and other activities on the platform.
+                          </div>
+                      </div>
+                  </div>
+                
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="pointsFaqHeading7">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pointsFaq7" aria-expanded="false" aria-controls="pointsFaq7">
+                              Can I earn points by promoting social media accounts?
+                          </button>
+                      </h2>
+                      <div id="pointsFaq7" class="accordion-collapse collapse" aria-labelledby="pointsFaqHeading7" data-bs-parent="#pointsFaqAccordion">
+                          <div class="accordion-body">
+                              Yes, you can earn points by engaging with promoted social media accounts. The amount of points earned depends on the <strong>promotion amount</strong> tied to each account. Details of the points offered are provided with each promotion.
+                          </div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <div class="accordion mt-3" id="accordionExample">
+      <div class="card accordion-item active">
+        <h2 class="accordion-header" id="headingOne">
+          <button type="button" class="accordion-button bg-warning" data-bs-toggle="collapse" data-bs-target="#accordionFunding" aria-expanded="false" aria-controls="accordionFunding" >
+            Funding Opportunities Eligibility
+          </button>
+        </h2>
+    
+        <div id="accordionFunding" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <div class="container mt-5">
+              <h2 class="mb-4">Funding Opportunities Eligibility FAQs</h2>
+              <div class="accordion" id="fundingFaqAccordion">
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="fundingFaqHeading1">
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#fundingFaq1" aria-expanded="true" aria-controls="fundingFaq1">
+                              What are the minimum qualifications required to apply for funding on selected opportunities?
+                          </button>
+                      </h2>
+                      <div id="fundingFaq1" class="accordion-collapse collapse" aria-labelledby="fundingFaqHeading1" data-bs-parent="#fundingFaqAccordion">
+                          <div class="accordion-body">
+                              To apply for funding on selected opportunities, a member must meet the following criteria:
+                              <ul>
+                                  <li><strong>Minimum Points:</strong> The member should have the required minimum points specified for the opportunity.</li>
+                                  <li><strong>Community Membership:</strong> The member must have been part of the community for at least <strong>2 months</strong>.</li>
+                                  <li><strong>Club Membership:</strong> The member should be an active member of at least <strong>one club</strong> that is directly related to the funding opportunity, with a history of funding in that club at least <strong>10 times</strong>.</li>
+                                  <li><strong>Invitations:</strong> The member must have invited at least <strong>10 other members</strong> to join the community.</li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+          
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="fundingFaqHeading2">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#fundingFaq2" aria-expanded="false" aria-controls="fundingFaq2">
+                              How is the location considered when applying for funding opportunities?
+                          </button>
+                      </h2>
+                      <div id="fundingFaq2" class="accordion-collapse collapse" aria-labelledby="fundingFaqHeading2" data-bs-parent="#fundingFaqAccordion">
+                          <div class="accordion-body">
+                              Locations play a key role in some funding opportunities. For instance, agribusiness opportunities might be funded for members located in areas that are suitable for agricultural activities. Each opportunity may have specific location requirements, so members should check the criteria before applying.
+                          </div>
+                      </div>
+                  </div>
+          
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="fundingFaqHeading3">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#fundingFaq3" aria-expanded="false" aria-controls="fundingFaq3">
+                              Why do I need to be an active member of a club to apply for funding?
+                          </button>
+                      </h2>
+                      <div id="fundingFaq3" class="accordion-collapse collapse" aria-labelledby="fundingFaqHeading3" data-bs-parent="#fundingFaqAccordion">
+                          <div class="accordion-body">
+                              Being an active member of a club ensures that you are engaged with the community and have a track record of contributing to club activities. This engagement is important as it demonstrates your commitment and participation in the area related to the funding opportunity, making you a more suitable candidate for funding.
+                          </div>
+                      </div>
+                  </div>
+          
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="fundingFaqHeading4">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#fundingFaq4" aria-expanded="false" aria-controls="fundingFaq4">
+                              What if I do not have enough points to apply for a funding opportunity?
+                          </button>
+                      </h2>
+                      <div id="fundingFaq4" class="accordion-collapse collapse" aria-labelledby="fundingFaqHeading4" data-bs-parent="#fundingFaqAccordion">
+                          <div class="accordion-body">
+                              If you do not have enough points to apply for a funding opportunity, you can accumulate more points through various activities, such as inviting new members, participating in community discussions, contributing to club funding, or buying points in the P2P section. Once you have the required points, you can apply for the opportunity.
+                          </div>
+                      </div>
+                  </div>
+          
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="fundingFaqHeading5">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#fundingFaq5" aria-expanded="false" aria-controls="fundingFaq5">
+                              How do I know if I am eligible for a specific funding opportunity?
+                          </button>
+                      </h2>
+                      <div id="fundingFaq5" class="accordion-collapse collapse" aria-labelledby="fundingFaqHeading5" data-bs-parent="#fundingFaqAccordion">
+                          <div class="accordion-body">
+                              Each funding opportunity will list its eligibility criteria, including the minimum points required, relevant club memberships, and location requirements. You can review these criteria on the opportunity’s details page to see if you qualify before applying.
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          </div>
+        </div>
+      </div>
+    </div>
+
+    </div>
+    <div class="col-md mb-4 mb-md-0">
+      <div class="card accordion-item">
+        <h2 class="accordion-header" id="headingTwo">
+          <button type="button" class="accordion-button collapsed bg-info text-white" data-bs-toggle="collapse" data-bs-target="#accordionTwo" aria-expanded="false" aria-controls="accordionTwo" >
+            Project Proposal Requirements and Guidelines: Eligibility, Points, and Club Participation for Quepter Youth Hub Members
+          </button>
+        </h2>
+        <div id="accordionTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <div class="container mt-5">
+              <h2 class="mb-4">Project Proposal FAQs</h2>
+              <div class="accordion" id="faqAccordion">
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="faqHeading1">
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="true" aria-controls="faq1">
+                              What is required for me to propose a project on Quepter Youth Hub?
+                          </button>
+                      </h2>
+                      <div id="faq1" class="accordion-collapse collapse" aria-labelledby="faqHeading1" data-bs-parent="#faqAccordion">
+                          <div class="accordion-body">
+                              To propose a project, you need to meet the following criteria:
+                              <ul>
+                                  <li>You must have accumulated at least <strong>100 points</strong>.</li>
+                                  <li>You must have invited <strong>at least 10 new members</strong> to join the community.</li>
+                                  <li>You should be an active member of one of the clubs that directly relate to the <strong>category</strong> of the project you wish to propose.</li>
+                                  <li>You must have participated in the <strong>weekly club funding</strong> at least <strong>10 times</strong>.</li>
+                                  <li>You must have been a member of the community for <strong>at least 2 months</strong>.</li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+          
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="faqHeading4">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4" aria-expanded="false" aria-controls="faq4">
+                              Why do I need to join a club to propose a project?
+                          </button>
+                      </h2>
+                      <div id="faq4" class="accordion-collapse collapse" aria-labelledby="faqHeading4" data-bs-parent="#faqAccordion">
+                          <div class="accordion-body">
+                              Joining a club that aligns with your project’s category ensures that you have the necessary <strong>community support and expertise</strong> relevant to your project's focus. It also fosters collaboration and ensures that your project proposal is well-supported by like-minded individuals.
+                          </div>
+                      </div>
+                  </div>
+          
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="faqHeading5">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5" aria-expanded="false" aria-controls="faq5">
+                              How do I join a club that matches my project's category?
+                          </button>
+                      </h2>
+                      <div id="faq5" class="accordion-collapse collapse" aria-labelledby="faqHeading5" data-bs-parent="#faqAccordion">
+                          <div class="accordion-body">
+                              To join a club, go to the "Clubs" section of the platform and select a club that matches your project’s focus area. Simply click "Join" and pay one time membership fee of <strong>KES 100</strong> to become a member. Make sure the club you join aligns with the <strong>category</strong> of your proposed project.
+                          </div>
+                      </div>
+                  </div>
+          
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="faqHeading6">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6" aria-expanded="false" aria-controls="faq6">
+                              What is weekly club funding, and why is it required?
+                          </button>
+                      </h2>
+                      <div id="faq6" class="accordion-collapse collapse" aria-labelledby="faqHeading6" data-bs-parent="#faqAccordion">
+                          <div class="accordion-body">
+                              Weekly club funding is a collaborative effort where club members contribute towards community projects and activities. Participating in this funding shows that you are <strong>actively engaged in the club</strong> and committed to community growth. You need to have participated <strong>at least 10 times</strong> to be eligible to propose a project.
+                          </div>
+                      </div>
+                  </div>
+          
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="faqHeading7">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq7" aria-expanded="false" aria-controls="faq7">
+                              How can I track my weekly club funding participation?
+                          </button>
+                      </h2>
+                      <div id="faq7" class="accordion-collapse collapse" aria-labelledby="faqHeading7" data-bs-parent="#faqAccordion">
+                          <div class="accordion-body">
+                              You can view your funding participation history in the <strong>Club Participation</strong> section of your profile. This will show the number of times you've contributed to weekly funding efforts.
+                          </div>
+                      </div>
+                  </div>
+          
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="faqHeading8">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq8" aria-expanded="false" aria-controls="faq8">
+                              I just joined the community, can I propose a project immediately?
+                          </button>
+                      </h2>
+                      <div id="faq8" class="accordion-collapse collapse" aria-labelledby="faqHeading8" data-bs-parent="#faqAccordion">
+                          <div class="accordion-body">
+                              No, to propose a project, you need to have been a member of the Quepter Youth Hub community for <strong>at least 2 months</strong>. This ensures that members have ample time to familiarize themselves with the platform and engage with the community before proposing a new project.
+                          </div>
+                      </div>
+                  </div>
+          
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="faqHeading9">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq9" aria-expanded="false" aria-controls="faq9">
+                              What happens if I don't meet all the criteria but still want to propose a project?
+                          </button>
+                      </h2>
+                      <div id="faq9" class="accordion-collapse collapse" aria-labelledby="faqHeading9" data-bs-parent="#faqAccordion">
+                          <div class="accordion-body">
+                              If you do not meet the eligibility criteria, your project proposal will not be accepted. It’s important to ensure that you fulfill all requirements before submitting your proposal to improve your chances of approval.
+                          </div>
+                      </div>
+                  </div>
+          
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="faqHeading10">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq10" aria-expanded="false" aria-controls="faq10">
+                              Is there a limit to how many projects I can propose?
+                          </button>
+                      </h2>
+                      <div id="faq10" class="accordion-collapse collapse" aria-labelledby="faqHeading10" data-bs-parent="#faqAccordion">
+                          <div class="accordion-body">
+                              There is currently no limit to the number of projects you can propose, as long as you meet the required criteria for each proposal. However, you must wait for the approval or rejection of an ongoing project before submitting a new one.
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion mt-3" id="accordionExample">
+        <div class="card accordion-item active">
+          <h2 class="accordion-header" id="headingOne">
+            <button type="button" class="accordion-button bg-secondary text-white" data-bs-toggle="collapse" data-bs-target="#accordionCategories" aria-expanded="false" aria-controls="accordionCategories" >
+              Choosing the Right Category for Your Club
+            </button>
+          </h2>
+      
+          <div id="accordionCategories" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <div class="container mt-5">
+                <h2 class="mb-4 text-center">Choosing the Right Category for Your Club: FAQs</h2>
+                <div class="accordion" id="faqAccordion">
+                  
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        What categories are available for creating a club?
+                      </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body">
+                        We offer a wide range of categories to accommodate different interests and expertise. These include Education & Learning, Business & Entrepreneurship, Technology & Innovation, Creative Arts & Media, Health & Wellness, Sports & Recreation, Finance & Investment, and many more. This allows members to find a category that aligns with their passion and goals.
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        How do I select the best category for my club?
+                      </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body">
+                        To select the best category for your club, consider the main purpose and activities of your club. For example, if your focus is on technology-related topics like AI, software development, or innovation, choose the "Technology & Innovation" category. If your club centers around helping the community, consider "Social Impact & Community Service" or "Environment & Sustainability." Always match your club's core mission with the most relevant category.
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Can I change the category of my club after it's created?
+                      </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body">
+                        Yes, you can change the category of your club if you find that another category better represents your club's goals and activities. However, we recommend choosing your category carefully during the initial setup to ensure consistency in your club's growth and activities.
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingFour">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        How do I know if my club fits a specific category?
+                      </button>
+                    </h2>
+                    <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body">
+                        Consider the primary activities and focus areas of your club. For instance, if your club is centered on discussing financial literacy, investments, or cryptocurrency, then "Finance & Investment" would be the most suitable category. If your club promotes health practices, exercise routines, or mental wellness, "Health & Wellness" would be a better fit. Review the description of each category to see which aligns most closely with your club's mission.
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingFive">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                        What are the benefits of choosing the right category for my club?
+                      </button>
+                    </h2>
+                    <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body">
+                        Selecting the right category helps members with similar interests find your club more easily, increasing engagement and participation. It also ensures that your club is featured in relevant sections of the community, allowing you to connect with members who are most likely to benefit from and contribute to your club's activities.
+                      </div>
+                    </div>
+                  </div>
+              
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+{% endblock content %}
+
+<div class="accordion mt-3" id="accordionExample">
+  <div class="card accordion-item active">
+    <h2 class="accordion-header" id="headingOne">
+      <button type="button" class="accordion-button bg-success" data-bs-toggle="collapse" data-bs-target="#accordionOne" aria-expanded="false" aria-controls="accordionOne" >
+          How Points Are Awarded and Their Importance
+      </button>
+    </h2>
+
+    <div id="accordionOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <!-- Points Award System Section -->
+          <div class="container points-section">
+              <p>
+                  Members earn points based on their participation in community activities such as project funding, post engagements, and mentorship involvement. Points are essential because they determine your eligibility for funding oppenings, project proposal and other opportunities. The more points you earn, the higher your rank in the community.
+              </p>
+              <ul>
+                  <li><strong>Crowd Funding:</strong> Earn 1 point for every KES 10 you contribute on leaderboard/crowd funding section.</li>
+                  <li><strong>Affiliate Program:</strong> Earn 2 point for every successful referral on your friends/relatives.</li>
+                  <li><strong>Post Likes:</strong> Earn 1 point for every 100 likes on your posts.</li>
+                  <li><strong>Mentorship Engagement:</strong> Earn points by actively participating in mentorship programs.</li>
+                  <li><strong>Sharing Points:</strong> You can ask your friends to share their points with you on P2P section, you can privately message your friend and tell him to send you some points, your ID is required which can be accessed on your profile section..</li>
+                  <li><strong>Buying Points:</strong> You can buy points on P2P section, this points will be automatically added to your account, 1 point = Kes 10.</li>
+                  <li><strong>Selling Points:</strong> You can sell your points on P2P section, 1 point = Kes 10. Fee of 10:1 point(s) applies on listing</li>
+              </ul>
+              <p class="text-muted">These points will improve your chances on opportunities and accessing premium resources in Quepter Youth Hub.</p>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

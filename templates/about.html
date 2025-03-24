@@ -1,0 +1,121 @@
+{% extends 'b.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="container">
+      <div class="page-banner">
+        <div class="row justify-content-center align-items-center h-100">
+          <div class="col-md-6">
+            <nav aria-label="Breadcrumb">
+              <ul class="breadcrumb justify-content-center py-0 bg-transparent">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active">About</li>
+              </ul>
+            </nav>
+            <h1 class="text-center">About Us</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 py-3">
+          <h2 class="title-section">A Hub for Changemakers</h2>
+          <div class="divider"></div>
+
+          <p>At Quepter Youth Hub, we believe that every young person has the potential to be a changemaker. Our platform is a vibrant ecosystem where creativity meets opportunity, and where the boldest ideas can come to life.</p>
+          <p>Whether you’re a dreamer, a doer, or a disruptor, Quepter Youth Hub is the place where your aspirations can take flight. We are more than just a network—we are a movement dedicated to nurturing the next generation of leaders and innovators.</p>
+        </div>
+        <div class="col-lg-6 py-3">
+          <div class="img-fluid py-3 text-center">
+            <img src="{% static '1.webp' %}" height="90%" width="90%" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-section">
+   <div class="container">
+     <div class="row align-items-center">
+      <div class="col-lg-6 py-3">
+        <div class="img-fluid py-3 text-center">
+          <img src="{% static 'onboarding.png' %}" width="80%" height="80%" alt="">
+        </div>
+      </div>
+       <div class="col-lg-6 py-3">
+         <h2 class="title-section">Fueling Ambition with Resources</h2>
+         <div class="divider"></div>
+
+         <p>We know that ambition alone isn’t enough to change the world—it needs to be fueled with the right resources, guidance, and support. That’s why Quepter Youth Hub provides our members with unparalleled access to mentorship, funding opportunities, and a wealth of knowledge.</p>
+         <p>Here, you can connect with industry experts, find investors who believe in your vision, and gain the skills needed to turn your passion into a thriving venture. </p>
+         <p>At Quepter Youth Hub, your potential is limitless, and we’re here to help you unlock it.</p>
+       </div>
+     </div>
+   </div>
+ </div>
+
+ <div class="page-section">
+   <div class="container">
+     <div class="row align-items-center">
+       <div class="col-lg-6 py-3">
+         <h2 class="title-section">Building a Community of Visionaries</h2>
+         <div class="divider"></div>
+
+         <p>Our strength lies in our community. At Quepter Youth Hub, you’ll find a diverse and dynamic group of individuals who share your passion for making a difference.</p>
+         <p>We are a collective of visionaries who understand that true progress happens when we come together to share ideas, collaborate on projects, and support one another’s growth.</p>
+         <p>This is a place where you can build lasting relationships, find your tribe, and be part of something bigger than yourself.</p>
+       </div>
+       <div class="col-lg-6 py-3">
+         <div class="img-fluid py-3 text-center">
+           <img src="{% static 'c.png' %}" width="80%" height="80%" alt="">
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+
+ <div class="page-section">
+   <div class="container">
+     <div class="row align-items-center">
+      <div class="col-lg-6 py-3">
+        <div class="img-fluid py-3 text-center">
+          <img src="{% static 'action.png' %}" width="80%" height="80%" alt="">
+        </div>
+      </div>
+       <div class="col-lg-6 py-3">
+         <h2 class="title-section">Empowerment Through Action</h2>
+         <div class="divider"></div>
+
+         <p>We believe that real empowerment comes from action. That’s why Quepter Youth Hub is designed to be a launchpad for your ideas, offering you the tools and opportunities to make a tangible impact.</p>
+         <p>Whether you’re leading a project, participating in a community initiative, or simply seeking to learn and grow, you’ll find that Quepter Youth Hub is a catalyst for your success.</p>
+         <p>We don’t just talk about change—we make it happen, together.</p>
+       </div>
+     </div>
+   </div>
+ </div>
+
+ <div class="page-section">
+   <div class="container">
+     <div class="row align-items-center">
+       <div class="col-lg-6 py-3">
+         <h2 class="title-section">Join the Revolution</h2>
+         <div class="divider"></div>
+
+         <p>The future belongs to those who are willing to shape it. At Quepter Youth Hub, we are on a mission to empower every member to take control of their destiny and contribute to the collective good.</p>
+         <p>We invite you to join us on this journey of discovery, innovation, and impact.</p>
+         <p>Together, we can build a world where every young person has the opportunity to thrive, lead, and leave a lasting legacy.</p>
+       </div>
+       <div class="col-lg-6 py-3">
+         <div class="img-fluid py-3 text-center">
+           <img src="{% static 'join.png' %}" width="90%" height="90%" alt="">
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+
+ {% endblock content %}

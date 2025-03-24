@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="text-center">Mentorship Platform</h2>
+
+    <!-- Mentorship Tabs -->
+    <ul class="nav nav-tabs" id="mentorshipTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="one-on-one-tab" data-toggle="tab" href="#one-on-one" role="tab" aria-controls="one-on-one" aria-selected="true">One-on-One Mentorship</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="group-tab" data-toggle="tab" href="#group" role="tab" aria-controls="group" aria-selected="false">Group Mentorship</a>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="mentorshipTabContent">
+        <!-- One-on-One Mentorship -->
+        <div class="tab-pane fade show active" id="one-on-one" role="tabpanel" aria-labelledby="one-on-one-tab">
+            <h4 class="pt-3">One-on-One with {{ mentor.username }}</h4>
+            <div class="card p-3 mb-3">
+                <div id="one-on-one-messages-container" class="message-box"></div>
+                <form id="one-on-one-send-message" class="form-inline mt-3">
+                    <textarea id="one-on-one-message" class="form-control w-75" placeholder="Type your message here"></textarea>
+                    <button type="submit" class="btn btn-primary w-25">Send</button>
+                    <input type="hidden" id="mentorship-id" value="{{ one_on_one_mentorship.id }}">
+                </form>
+            </div>
+        </div>
+
+        <!-- Group Mentorship -->
+        <div class="tab-pane fade" id="group" role="tabpanel" aria-labelledby="group-tab">
+            <h4 class="pt-3">Group Mentorship: {{ group_mentorship.name }}</h4>
+            <div class="card p-3 mb-3">
+                <div id="group-messages-container" class="message-box"></div>
+                <form id="group-send-message" class="form-inline mt-3">
+                    <textarea id="group-message" class="form-control w-75" placeholder="Type your message here"></textarea>
+                    <button type="submit" class="btn btn-success w-25">Send</button>
+                    <input type="hidden" id="group-id" value="{{ group_mentorship.id }}">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // One-on-One AJAX Messaging
+    $('#one-on-one-send-message').submit(function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'send_one_on_one_message' %}",
+            data: {
+                'mentorship_id': $('#mentorship-id').val(),
+                'message': $('#one-on-one-message').val(),
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    $('#one-on-one-message').val('');
+                    loadOneOnOneMessages();
+                }
+            }
+        });
+    });
+
+    function loadOneOnOneMessages() {
+        $.ajax({
+            url: "{% url 'load_one_on_one_messages' mentorship_id=one_on_one_mentorship.id %}",
+            success: function(data) {
+                $('#one-on-one-messages-container').html(data);
+            }
+        });
+    }
+
+    // Group AJAX Messaging
+    $('#group-send-message').submit(function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'send_group_message' %}",
+            data: {
+                'group_id': $('#group-id').val(),
+                'message': $('#group-message').val(),
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    $('#group-message').val('');
+                    loadGroupMessages();
+                }
+            }
+        });
+    });
+
+    function loadGroupMessages() {
+        $.ajax({
+            url: "{% url 'load_group_messages' group_id=group_mentorship.id %}",
+            success: function(data) {
+                $('#group-messages-container').html(data);
+            }
+        });
+    }
+
+    // Auto-refresh the messages every 5 seconds
+    setInterval(loadOneOnOneMessages, 5000);
+    setInterval(loadGroupMessages, 5000);
+</script>
+
+{% endblock %}

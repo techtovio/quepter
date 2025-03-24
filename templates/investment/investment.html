@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Investment Opportunities | Quepter Youth Hub{% endblock title %}
+{% block content %}
+    <style>
+        .section-title {
+            margin-top: 50px;
+            text-align: center;
+            color: #007bff;
+        }
+        .card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .points-section {
+            background-color: #f8f9fa;
+            padding: 40px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+        .points-section h3 {
+            color: #007bff;
+        }
+    </style>
+</head>
+
+    <!-- Funding Opportunities Section -->
+    <div class="container py-5">
+        <h1 class="section-title">Funding Opportunities</h1>
+        <p class="text-center">Discover projects based on geographical location and market demand. Apply using your earned points.</p>
+        
+        <div class="row">
+            {% for opportunity in opportunities %}
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ opportunity.title }}</h5>
+                            <p class="card-text">{{ opportunity.description|linebreaks }}</p>
+                            <p><strong>Location:</strong> {{ opportunity.location }}</p>
+                            <p><strong>Points Required:</strong> {{ opportunity.min_points_required }}</p>
+                            <button class="btn btn-primary" onclick="openApplicationModal({{ opportunity.id }})">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    
+
+    <!-- Mentorship Program Section -->
+    <div class="container py-5">
+        <h3 class="section-title">Mentorship Programs</h3>
+        <p class="text-center">Join our mentorship programs to gain valuable insights and grow your skills while earning points for your engagement.</p>
+        
+        <div class="row">
+            {% for program in programs %}
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ program.title }}</h5>
+                            <p class="card-text">{{ program.description }}</p>
+                            <p><strong>Location:</strong> {{ program.location }}</p>
+                            <p><strong>Start Date:</strong> {{ program.start_date }}</p>
+                            <p><strong>End Date:</strong> {{ program.end_date }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Apply Modal Section -->
+    <div class="modal fade" id="applicationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Submit Application</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <p><b>My Points : </b>{{user.profile.points}} points</p>
+                        <p><b>My invites : </b>{{user.profile.referred_friends.count}} friends</p>
+                        <p><b>Account Age : </b>{{user.profile.account_age}} month(s)</p>
+                        <p><b>My Clubs : </b>{{user.profile.user_clubs}}</p>
+                    </div>
+                    <form id="applicationForm" action="" method="post">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <label for="points">Points to Spend</label>
+                            <input type="number" class="form-control" id="points" name="points" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="application_text">Application Text</label>
+                            <textarea class="form-control" id="application_text" name="application_text" rows="3" required></textarea>
+                        </div>
+                        <input type="hidden" id="opportunityId">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openApplicationModal(opportunityId) {
+            document.getElementById('opportunityId').value = opportunityId;
+            new bootstrap.Modal(document.getElementById('applicationModal')).show();
+        }
+
+        document.getElementById('applicationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const points = document.getElementById('points').value;
+            const application_text = document.getElementById('application_text').value;
+            const opportunityId = document.getElementById('opportunityId').value;
+            
+            fetch(`/investment/submit_application/${opportunityId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({points: points, application_text: application_text}),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                if (data.success) {
+                    location.reload();
+
+                }
+            });
+        });
+    </script>
+
+{% endblock content %}

@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ job.title }} | Quepter Youth Hub{% endblock title %}
+{% block content %}
+
+<style>
+    .job-header {
+        background-color: #f8f9fa;
+        padding: 30px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+
+    .job-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+
+    .job-header p {
+        font-size: 1.1rem;
+    }
+
+    .job-details {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    .job-details .detail-item {
+        flex: 1;
+        padding: 15px;
+        border-radius: 8px;
+        background-color: #f1f1f1;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+
+    .job-description {
+        margin-bottom: 30px;
+    }
+
+    .apply-btn {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        cursor: pointer;
+    }
+
+    .apply-btn:hover {
+        background-color: #0056b3;
+    }
+
+    /* Application Modal */
+    .modal-header {
+        border-bottom: none;
+    }
+
+    .modal-body {
+        padding: 30px;
+    }
+
+    .form-control {
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="container">
+    <div class="job-header">
+        <h1>{{ job.title }}</h1>
+        <p class="text-muted">Location - {{ job.location }}</p>
+        <button class="apply-btn" data-bs-toggle="modal" data-bs-target="#applyModal" {% if club_membership %}{% else %}disabled{% endif %}>{% if club_membership %}Apply Now{% else %}Join Club to Apply{% endif %}</button>
+    </div>
+
+    <div class="job-details">
+        <div class="detail-item">
+            <strong>Job Category:</strong> {{ job.category }}
+        </div>
+        <!--div class="detail-item">
+            <strong>Salary:</strong> {{ job.salary }}
+        </div-->
+        <div class="detail-item">
+            <strong>Posted on:</strong> {{ job.posted_date }}
+        </div>
+        <div class="detail-item">
+            <strong>Closing Date:</strong> {{ job.deadline }}
+        </div>
+    </div>
+
+    <div class="job-description">
+        <h3>Job Description</h3>
+        <p>{{ job.description }}</p>
+    </div>
+    <div class="job-description">
+        <h3>Job Requirements</h3>
+        <p>{{ job.requirements }}</p>
+    </div>
+
+    <div id="applicationStatus"></div>
+
+    <!-- Application Modal -->
+    <div class="modal fade" id="applyModal" tabindex="-1" role="dialog" aria-labelledby="applyModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="applyModalLabel">Apply for {{ job.title }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="applyForm">
+                        <div class="form-group">
+                            <label for="applicantName">Full Name</label>
+                            <input type="text" class="form-control" id="applicantName" value="{{user.first_name}} {{user.last_name}}" required disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="applicantEmail">Email Address</label>
+                            <input type="email" class="form-control" id="applicantEmail" value="{{user.email}}" required disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="applicantResume">Resume (PDF)</label>
+                            <input type="file" class="form-control" id="applicantResume" accept=".pdf" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Application</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const applyForm = document.getElementById('applyForm');
+        const applicationStatus = document.getElementById('applicationStatus');
+
+        applyForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const formData = new FormData();
+            formData.append('name', document.getElementById('applicantName').value);
+            formData.append('email', document.getElementById('applicantEmail').value);
+            formData.append('resume', document.getElementById('applicantResume').files[0]);
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+            fetch('{% url "apply_job"  %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    applicationStatus.innerHTML = `
+                        <div class="alert alert-success" role="alert">
+                            Your application has been submitted successfully.
+                        </div>
+                    `;
+                    $('#applyModal').modal('hide');
+                } else {
+                    applicationStatus.innerHTML = `
+                        <div class="alert alert-danger" role="alert">
+                            ${data.message}
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                applicationStatus.innerHTML = `
+                    <div class="alert alert-danger" role="alert">
+                        There was an error submitting your application. Please try again.
+                    </div>
+                `;
+            });
+        });
+    });
+</script>
+
+{% endblock content %}

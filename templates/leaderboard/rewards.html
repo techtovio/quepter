@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-warning text-dark">
+            <h2 class="mb-0">Redeemable Rewards</h2>
+        </div>
+        <div class="card-body">
+            <div class="row" id="rewards-list">
+                <!-- Rewards data will be loaded here via AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        function loadRewards() {
+            $.ajax({
+                url: "{% url 'rewards' %}",
+                type: "GET",
+                success: function(response) {
+                    let rewards = response.rewards;
+                    let list = $("#rewards-list");
+                    list.empty();
+                    rewards.forEach(reward => {
+                        list.append(
+                            `<div class="col-md-4 mb-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${reward.name}</h5>
+                                        <p class="card-text">${reward.description}</p>
+                                        <p class="card-text"><strong>Points Required:</strong> ${reward.points_required}</p>
+                                        <button class="btn btn-primary btn-sm redeem-reward" data-id="${reward.id}">Redeem</button>
+                                    </div>
+                                </div>
+                            </div>`
+                        );
+                    });
+                }
+            });
+        }
+
+        loadRewards();
+
+        // Handle reward redemption (you'll need a separate view for this)
+        $(document).on('click', '.redeem-reward', function() {
+            let rewardId = $(this).data('id');
+            // Implement AJAX call for redeeming a reward.
+        });
+    });
+</script>
+{% endblock %}

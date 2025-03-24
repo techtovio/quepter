@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Discover Your Next Adventure with Our Vibrant Clubs</h2>
+
+    <!-- Section for Clubs the User has Joined -->
+    {% if joined_clubs %}
+    <div class="mb-5">
+        <h3 class="text-primary mb-4">Your Clubs</h3>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for club in joined_clubs %}
+            <div class="col">
+                <div class="card h-100 shadow-lg border-0 border-primary">
+                    <div class="card-img-top position-relative">
+                        <img src="{{ club.image.url }}" class="card-img-top" alt="{{ club.name }}" style="height: 200px; object-fit: cover;">
+                        <span class="badge bg-success position-absolute top-0 start-0 m-2">Member</span>
+                        <span class="badge bg-primary position-absolute top-0 end-0 m-2">{{ club.get_category_display }}</span>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{{ club.name }}</h5>
+                        <p class="card-text">{{ club.description|linebreaks|truncatewords:15 }}</p>
+                        <a href="{% url 'club_detail' club.uuid %}" class="btn btn-outline-success w-100">View Club Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Section for All Clubs -->
+    <h3 class="text-primary mb-4">Explore Other Clubs</h3>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for club in clubs %}
+        <div class="col">
+            <div class="card h-100 shadow-lg border-0">
+                <div class="card-img-top position-relative">
+                    <img src="{{ club.image.url }}" class="card-img-top" alt="{{ club.name }}" style="height: 200px; object-fit: cover;">
+                    <span class="badge bg-primary position-absolute top-0 start-0 m-2">{{ club.get_category_display }}</span>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ club.name }}</h5>
+                    <p class="card-text">{{ club.description|linebreaks|truncatewords:15 }}</p>
+                    <a href="{% url 'club_detail' club.uuid %}" class="btn btn-outline-primary w-100">View Club Details</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col">
+            <p class="text-center">No clubs available at the moment. Please check back later.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Benefits Section -->
+    <div class="mt-5 p-5 text-center text-white" style="background: linear-gradient(90deg, #007bff, #6610f2); border-radius: 15px;">
+        <h2 class="mb-4">Why Join a Club?</h2>
+        <div class="row text-start">
+            <div class="col-md-4">
+                <h4><i class="bi bi-star-fill text-warning"></i> Earn Annual Interests</h4>
+                <p>Clubs offer an excellent opportunity to earn annual interests from collective investments and participation in various activities.</p>
+            </div>
+            <div class="col-md-4">
+                <h4><i class="bi bi-people-fill text-info"></i> Network & Collaborate</h4>
+                <p>Meet like-minded individuals, collaborate on exciting projects, and expand your network globally.</p>
+            </div>
+            <div class="col-md-4">
+                <h4><i class="bi bi-lightbulb-fill text-warning"></i> Develop Skills</h4>
+                <p>Participate in workshops and exclusive programs to build skills, learn new concepts, and grow personally and professionally.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+<a href="{% url 'club_create' %}" class="btn btn-light mt-4">Propose a Club Now</a>

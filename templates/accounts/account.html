@@ -1,0 +1,336 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{user.first_name}} {{user.last_name}}{% endblock title %}
+
+{% block content %}
+<style>
+  /* Add this to your custom CSS file or within a <style> tag in the template */
+@media (max-width: 768px) {
+    .modal-lg {
+        max-width: 90%;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
+}
+
+</style>
+<div class="col-md-12">
+    <ul class="nav nav-pills flex-column flex-md-row mb-3">
+      <li class="nav-item">
+        <a class="nav-link active" href="{% url 'profile' %}"><i class="bx bx-user me-1"></i> Account</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'notification-settings' %}"><i class="bx bx-bell me-1"></i> Notifications</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'connection-settings' %}"
+          ><i class="bx bx-link-alt me-1"></i> Connections</a
+        >
+      </li>
+    </ul>
+    <div class="row">
+      <div class="col-lg-8 mb-4 order-0">
+        <div class="card">
+          <div class="d-flex align-items-end row">
+            <div class="col-sm-7">
+              <div class="card-body">
+                <h5 class="card-title text-primary">Congratulations {{user.first_name}}! 🎉</h5>
+                <p class="mb-4">
+                  You have <span class="fw-bold">{{notifications.count}}</span> notifications today. Check your new badge below.
+                </p>
+                <div class="col">
+                  <button 
+                      type="button" 
+                      class="btn btn-sm btn-outline-primary" 
+                      data-bs-toggle="popover" 
+                      data-bs-offset="0,14" 
+                      data-bs-placement="top" 
+                      data-bs-html="true" 
+                      data-bs-content="
+                          <div style='max-width: 250px;'>
+                              <h5 style='color: #00796b; margin-bottom: 8px;'>🎉 Bravoo! 🎉</h5>
+                              <p style='font-size: 0.9em; margin-bottom: 8px;'>
+                                  You have scored <span style='color: #00c853; font-weight: bold;'>@{{profile.rank_score}}</span> Credibility Score!
+                              </p>
+                              <p style='font-size: 0.9em;'>
+                                  This places you at <span style='color: #ff6f00; font-weight: bold;'>#{{profile.rank}}</span> in the overall ranking. 🌟 Keep up the great work!
+                              </p>
+                              <div class='d-flex justify-content-between mt-2'>
+                                  <button class='btn btn-success btn-sm' style='background-color: #00c853; border: none; font-size: 0.8em;'>
+                                      See Leaderboard
+                                  </button>
+                                  <button class='btn btn-warning btn-sm' style='background-color: #ff9800; border: none; font-size: 0.8em;'>
+                                      Claim Rewards
+                                  </button>
+                              </div>
+                          </div>" 
+                      title="My Ranking">
+                      View Badges
+                  </button>
+
+                  <!-- Button to Trigger the Popover -->
+                  <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="popover" data-bs-html="true" data-bs-placement="bottom" title="<h5 style='color: #4a90e2; margin: 0;'>🎖️ Loyalty Badge - Your Path to Greatness!</h5>" 
+                    data-bs-content="
+                    <div style='font-size: 0.9rem; line-height: 1.4;'>
+                        <h6 style='color: #4a90e2; font-weight: bold; text-align: center; margin-top: 0.5rem;'>How to Earn the Badge</h6>
+                        <ul style='padding: 0; margin: 0; list-style-type: none;'>
+                            <li>🏃‍♂️ <span style='color: #ff6f61;'><strong>Active Member:</strong></span> Participate regularly in forums.</li>
+                            <li>💸 <span style='color: #f4b400;'><strong>Crowdfunding:</strong></span> Contribute to <u>80%</u> of funding projects.</li>
+                            <li>💡 <span style='color: #34a853;'><strong>Propose Projects:</strong></span> Suggest <u>community-benefiting</u> projects.</li>
+                            <li>🤝 <span style='color: #4285f4;'><strong>P2P Sharing:</strong></span> Support members in need.</li>
+                            <li>🎟️ <span style='color: #fbbc05;'><strong>Event Attendance:</strong></span> Attend <u>10+</u> events.</li>
+                            <li>🏆 <span style='color: #ea4335;'><strong>Earn 1,000+ Points:</strong></span> Through engagement and activities.</li>
+                            <li>🎓 <span style='color: #34a853;'><strong>Physical Mentorship:</strong></span> Attend one in-person session.</li>
+                        </ul>
+                        <h6 style='color: #4a90e2; font-weight: bold; text-align: center; margin-top: 1rem;'>Benefits of the Badge</h6>
+                        <ul style='padding: 0; margin: 0; list-style-type: none;'>
+                            <li>💰 <span style='color: #ff6f61;'><strong>50% Off:</strong></span> Discounts on all services.</li>
+                            <li>📚 <span style='color: #f4b400;'><strong>Free Mentorship:</strong></span> Exclusive sessions access.</li>
+                            <li>🚀 <span style='color: #34a853;'><strong>Priority Access:</strong></span> Early access to jobs and funding.</li>
+                            <li>🌍 <span style='color: #4285f4;'><strong>Invite 50 Members:</strong></span> Expand your network.</li>
+                            <li>🥇 <span style='color: #ea4335;'><strong>Unique Badge:</strong></span> Display your golden badge.</li>
+                            <li>📢 <span style='color: #fbbc05;'><strong>Special Recognition:</strong></span> Featured in newsletters.</li>
+                            <li>🎉 <span style='color: #34a853;'><strong>VIP Event Access:</strong></span> Front-row seats at events.</li>
+                        </ul>
+                    </div>
+                    ">
+                        Learn More About the Loyalty Badge 🌟
+                    </button>
+  
+
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-5 text-center text-sm-left align-items-center">
+              <div class="card-body pb-0 px-0 px-md-4">
+                <label for="profileID" class="form-label">PROFILE ID</label>
+                <div id="IDcopied"></div>
+                <div class="input-group">
+                  <input type="text" class="form-control" value="{{profile.code}}" placeholder="{{affiliate.code}}" id="copyID" aria-label="Profile ID" aria-describedby="button-addon2" disabled/>
+                  <button class="btn btn-outline-primary" type="button" onclick="copyID()" id="button-addon2">copy</button>
+                </div>
+                <br><br>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-4 order-1">
+        <div class="row">
+          <div class="col-lg-6 col-md-12 col-6 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <div class="card-title d-flex align-items-start justify-content-between">
+                  <div class="avatar flex-shrink-0">
+                    <img
+                      src="{% static 'assets/img/icons/unicons/chart-success.png' %}"
+                      alt="chart success"
+                      class="rounded"
+                    />
+                  </div>
+                  <div class="dropdown">
+                    <button class="btn p-0" type="button" id="cardOpt3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="bx bx-dots-vertical-rounded"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
+                      <a class="dropdown-item" href="javascript:void(0);">Learn More</a>
+                    </div>
+                  </div>
+                </div>
+                <span class="fw-semibold d-block mb-1">Points</span>
+                <h3 class="card-title mb-2">{{profile.points}}</h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-12 col-6 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <div class="card-title d-flex align-items-start justify-content-between">
+                  <div class="avatar flex-shrink-0">
+                    <img src="{% static 'assets/img/icons/unicons/wallet-info.png' %}" alt="Credit Card" class="rounded"/>
+                  </div>
+                  <div class="dropdown">
+                    <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="bx bx-dots-vertical-rounded"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
+                      <a class="dropdown-item" href="" data-bs-toggle="modal" data-bs-target="#AddFunds">Add Funds</a>
+                      <a class="dropdown-item" href="" data-bs-toggle="modal" data-bs-target="#WithdrawFunds">Withdraw Funds</a>
+
+                      <!-- Trigger for Modal -->
+                      <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#transactionHistoryModal">
+                          View Transaction History
+                      </a>
+
+                    </div>
+                  </div>
+                </div>
+                <span>Wallet</span>
+                <h3 class="card-title text-nowrap mb-1">ksh {{profile.funds}}</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card mb-4">
+      <h5 class="card-header">Profile Details</h5>
+      <!-- Account -->
+      <div class="card-body">
+        <div class="d-flex align-items-start align-items-sm-center gap-4">
+          {% if profile.image %}
+          <img src="{{profile.image.url}}" alt="user-avatar" class="d-block rounded" height="100" width="100" id="uploadedAvatar"/>
+          {% else %}
+          <img src="{% static 'person.webp' %}" alt="user-avatar" class="d-block rounded" height="100" width="100" id="uploadedAvatar"/>
+          {% endif %}
+          <div class="button-wrapper">
+            <form action="{% url 'upload-profile' %}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <label for="upload" class="btn btn-primary me-2 mb-4" tabindex="0">
+                <span class="d-none d-sm-block">Upload new photo</span>
+                <i class="bx bx-upload d-block d-sm-none"></i>
+                <input name="image" type="file" id="upload" class="account-file-input" multiple hidden accept="image/png, image/jpeg" required/>
+              </label>
+              <button type="submit" class="btn btn-outline-secondary account-image-reset mb-4">
+                <i class="bx bx-reset d-block d-sm-none"></i>
+                <span class="d-none d-sm-block">upload</span>
+              </button>
+            </form>
+            <p class="text-muted mb-0">Allowed JPG or PNG. Max size of 800K</p>
+          </div>
+        </div>
+      </div>
+      <hr class="my-0" />
+      <div class="card-body">
+        <div class="text-center">
+          <div id="linkcopied">
+            <h5>My Affiliate Link</h5>
+          </div>
+          <div class="input-group">
+            <input type="text" class="form-control" value="https://quepter.co.ke/accounts/register/{{profile.code}}/" placeholder="https://quepter.co.ke/accounts/register/affiliate/{{affiliate.code}}/" id="copylink" aria-label="Affiliate Link" aria-describedby="button-addon2" disabled/>
+            <button class="btn btn-outline-primary" type="button" onclick="copyText()" id="button-addon2">copy</button>
+          </div>
+        </div>
+
+        <br>
+        <hr class="my-0" />
+        <br>
+        <form id="formAccountSettings" method="post"  action="{% url 'profile' %}">
+          {% csrf_token %}
+          <div class="row">
+            <div class="mb-3 col-md-6">
+              <label for="firstName" class="form-label">First Name</label>
+              <input class="form-control" type="text" id="firstName" name="firstName" value="{{user.first_name}}" autofocus disabled />
+            </div>
+            <div class="mb-3 col-md-6">
+              <label for="lastName" class="form-label">Last Name</label>
+              <input class="form-control" type="text" name="lastName" id="lastName" value="{{user.last_name}}" disabled/>
+            </div>
+            <div class="mb-3 col-md-6">
+              <label for="email" class="form-label">E-mail</label>
+              <input class="form-control" type="text" id="email" name="email" value="{{user.email}}" placeholder="{{user.email}}" disabled
+              />
+            </div>
+            <div class="mb-3 col-md-6">
+              <label for="organization" class="form-label">Profession</label>
+              <input type="text" class="form-control" id="organization" name="profession" value="{{profile.profession}}"
+              />
+            </div>
+            <div class="mb-3 col-md-6">
+              <label class="form-label" for="phoneNumber">Phone Number</label>
+              <div class="input-group input-group-merge">
+                <span class="input-group-text">KE (+254)</span>
+                <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="{{profile.phone_no}}" disabled
+                />
+              </div>
+            </div>
+            <div class="mb-3 col-md-6">
+              <label class="form-label" for="county">County</label>
+              <select id="county" name="county" class="select2 form-select">
+                <option value="{{profile.county}}">{{profile.county}}</option>
+                <option value="Nairobi">Nairobi</option>
+                <option value="Nakuru">Nakuru</option>
+                
+              </select>
+            </div>
+          </div>
+          <div class="mt-2">
+            <button type="submit" class="btn btn-primary me-2">Save changes</button>
+            <button type="reset" class="btn btn-outline-secondary">Cancel</button>
+          </div>
+        </form>
+      </div>
+      <!-- /Account -->
+    </div>
+    <div class="card">
+      <h5 class="card-header">Delete Account</h5>
+      <div class="card-body">
+        <div class="mb-3 col-12 mb-0">
+          <div class="alert alert-warning">
+            <h6 class="alert-heading fw-bold mb-1">Are you sure you want to delete your account?</h6>
+            <p class="mb-0">Once you delete your account, there is no going back. Please be certain.</p>
+          </div>
+        </div>
+        <form id="formAccountDeactivation" onsubmit="return false">
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" name="accountActivation" id="accountActivation" />
+            <label class="form-check-label" for="accountActivation"
+              >I confirm my account deactivation</label
+            >
+          </div>
+          <button type="submit" class="btn btn-danger deactivate-account">Deactivate Account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <script>
+    function copyText() {
+      var text = document.getElementById("copylink");
+      var parent = document.getElementById('linkcopied');
+      text.select();
+      text.setSelectionRange(0, 99999);
+      navigator.clipboard.writeText(text.value);
+      var newChild = `
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+          <span class="fe fe-check fe-16 mr-2"></span> Link Copied Successfully! 
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>`;
+      parent.insertAdjacentHTML('beforeend', newChild);
+  }
+  </script>
+  <script>
+    function copyID() {
+      var text = document.getElementById("copyID");
+      var parent = document.getElementById('IDcopied');
+      text.select();
+      text.setSelectionRange(0, 99999);
+      navigator.clipboard.writeText(text.value);
+      var newChild = `
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+          <span class="fe fe-check fe-16 mr-2"></span> ID Copied Successfully! 
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>`;
+      parent.insertAdjacentHTML('beforeend', newChild);
+  }
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const content = document.getElementById('loyaltyBadgePopoverContent').innerHTML;
+
+        const popover = new bootstrap.Popover(document.getElementById('loyaltyBadgeBtn'), {
+            content: content,
+            html: true,
+            trigger: 'click',
+            placement: 'top',
+            sanitize: false, // Allowing HTML inside the popover content
+        });
+    });
+</script>
+
+{% endblock content %}

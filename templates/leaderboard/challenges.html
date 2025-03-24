@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+            <h2 class="mb-0">Available Challenges</h2>
+        </div>
+        <div class="card-body">
+            <div class="row" id="challenges-list">
+                <!-- Challenges data will be loaded here via AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        function loadChallenges() {
+            $.ajax({
+                url: "{% url 'challenges' %}",
+                type: "GET",
+                success: function(response) {
+                    let challenges = response.challenges;
+                    let list = $("#challenges-list");
+                    list.empty();
+                    challenges.forEach(challenge => {
+                        let statusButton = challenge.completed
+                            ? '<button class="btn btn-success btn-sm" disabled>Completed</button>'
+                            : `<button class="btn btn-primary btn-sm complete-challenge" data-id="${challenge.id}">Complete Challenge</button>`;
+                        list.append(
+                            `<div class="col-md-6 mb-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${challenge.name}</h5>
+                                        <p class="card-text">${challenge.description}</p>
+                                        <p class="card-text"><strong>Points:</strong> ${challenge.points_awarded}</p>
+                                        ${statusButton}
+                                    </div>
+                                </div>
+                            </div>`
+                        );
+                    });
+                }
+            });
+        }
+
+        loadChallenges();
+
+        // Handle challenge completion
+        $(document).on('click', '.complete-challenge', function() {
+            let challengeId = $(this).data('id');
+            $.ajax({
+                url: `/challenges/complete/${challengeId}/`,
+                type: "POST",
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    alert(response.message);
+                    loadChallenges();
+                },
+                error: function(xhr) {
+                    alert("Error completing challenge: " + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

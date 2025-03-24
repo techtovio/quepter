@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Administration{% endblock title %}
+
+{% block content %}
+{% load static %}
+<div class="container my-5">
+  <!-- Jobs Table -->
+  <h3>Manage Jobs</h3>
+  <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#createJobModal">Add New Job</button>
+  <table class="table table-striped table-hover">
+      <thead>
+          <tr>
+              <th>Title</th>
+              <th>Action</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for job in jobs %}
+          <tr>
+              <td>{{ job.title }}</td>
+              <td>
+                  <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editJobModal{{ job.uuid }}">Edit</button>
+                  <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteJobModal{{ job.uuid }}">Delete</button>
+              </td>
+          </tr>
+
+          <!-- Edit Modal for Job -->
+          <div class="modal fade" id="editJobModal{{ job.uuid }}" tabindex="-1" aria-labelledby="editJobModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form id="editJobForm{{ job.uuid }}" method="POST">
+                  {% csrf_token %}
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="editJobModalLabel">Edit Job</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="mb-3">
+                      <label for="jobTitle" class="form-label">Job Title</label>
+                      <input type="text" class="form-control" id="jobTitle{{ job.uuid }}" name="title" value="{{ job.title }}" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="jobDescription" class="form-label">Description</label>
+                      <textarea class="form-control" id="jobDescription{{ job.uuid }}" name="description">{{ job.description }}</textarea>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Delete Modal for Job -->
+          <div class="modal fade" id="deleteJobModal{{ job.uuid }}" tabindex="-1" aria-labelledby="deleteJobModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteJobModalLabel">Delete Job</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Are you sure you want to delete this job?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-danger" onclick="deleteJob('{{ job.uuid }}')">Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% endfor %}
+      </tbody>
+  </table>
+
+  <!-- Other Tables (Events, Ads, Leadership) go below here with similar structure -->
+
+  <!-- Graphs for real-time analytics -->
+  <h3>Activity Summary</h3>
+  <div class="row">
+    <div class="col-md-6">
+      <canvas id="jobsChart"></canvas>
+    </div>
+    <div class="col-md-6">
+      <canvas id="transactionsChart"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<!-- Create Job Modal -->
+<div class="modal fade" id="createJobModal" tabindex="-1" aria-labelledby="createJobModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="createJobForm" method="POST">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="createJobModalLabel">Create New Job</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="newJobTitle" class="form-label">Job Title</label>
+            <input type="text" class="form-control" id="newJobTitle" name="title" required>
+          </div>
+          <div class="mb-3">
+            <label for="newJobTitle" class="form-label">Job Category</label>
+            <select name="job_category" id="job_category" class="form-control" required>
+              <option value=""> Category..</option>
+              {% for category in job_categories %}
+              <option value="{{category.uuid}}">{{category.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="newJobDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="newJobDescription" name="description"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="newJobRequirements" class="form-label">Requirements</label>
+            <textarea class="form-control" id="newJobRequirements" name="requirements"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="newJobLocation" class="form-label">Location</label>
+            <input type="text" class="form-control" id="newJobLocation" name="location" required>
+          </div>
+          <div class="mb-3">
+            <label for="newJobLocation" class="form-label">Location</label>
+            <input type="text" class="form-control" id="newJobLocation" name="location" required>
+          </div>
+          <div class="mb-3">
+            <label for="newJobSalary" class="form-label">Salary</label>
+            <input type="text" class="form-control" id="newJobSalary" name="salary" required>
+          </div>
+          <div class="mb-3">
+            <label for="applicationDeadLine" class="form-label">Deadline</label>
+            <input type="date" class="form-control" id="applicationDeadLine" name="deadline" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-success">Create Job</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  // Example AJAX calls for adding, editing, and deleting jobs
+
+  $("#createJobForm").submit(function (e) {
+    e.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: "{% url 'create_job' %}",
+      data: $(this).serialize(),
+      success: function (response) {
+        if (response.status === 'success') {
+          alert('Job created successfully');
+          location.reload();
+        } else {
+          alert('Error: ' + response.message);
+        }
+      },
+      error: function () {
+        alert('An error occurred');
+      }
+    });
+  });
+
+  function deleteJob(uuid) {
+    $.ajax({
+      type: "POST",
+      url: "/admin/delete_job/" + uuid + "/",
+      data: {
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+      },
+      success: function (response) {
+        if (response.status === 'success') {
+          alert('Job deleted successfully');
+          location.reload();
+        } else {
+          alert('Error: ' + response.message);
+        }
+      },
+      error: function () {
+        alert('An error occurred');
+      }
+    });
+  }
+
+  // Charts for job summary
+  var ctxJobs = document.getElementById('jobsChart').getContext('2d');
+  var jobsChart = new Chart(ctxJobs, {
+      type: 'pie',
+      data: {
+          labels: ['IT', 'Marketing', 'Engineering'],
+          datasets: [{
+              label: 'Jobs by Category',
+              data: [12, 19, 7],
+              backgroundColor: ['#ff6384', '#36a2eb', '#cc65fe']
+          }]
+      }
+  });
+
+  // Transactions summary chart
+  var ctxTransactions = document.getElementById('transactionsChart').getContext('2d');
+  var transactionsChart = new Chart(ctxTransactions, {
+      type: 'line',
+      data: {
+          labels: ['January', 'February', 'March'],
+          datasets: [{
+              label: 'Transactions',
+              data: [5000, 10000, 7500],
+              borderColor: '#4bc0c0',
+              fill: false
+          }]
+      }
+  });
+</script>
+{% endblock content %}

@@ -1,0 +1,1 @@
+from quepter.wsgi import application

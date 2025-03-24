@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Projects{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Projects</h2>
+    
+    <!-- Display Projects -->
+    <div class="row">
+        {% for project in projects %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.title }}" style="object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.title }}</h5>
+                    <p class="card-text text-truncate">{{ project.description|linebreaks }}</p>
+                    <p><strong>Status:</strong> {{ project.status }}</p>
+                    <p><strong>Participants:</strong> {{ project.participant_count }}</p>
+                    <p><strong>Progress:</strong> {{ project.progress }}%</p>
+                    <a href="{% url 'project_detail' project.uuid %}" class="btn btn-primary btn-sm">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center text-muted">No projects available at the moment.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Button to open Propose Project Modal -->
+    <div class="text-center mt-5">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#proposeProjectModal">
+            Propose a Project
+        </button>
+    </div>
+</div>
+
+<!-- Modal for Proposing a Project -->
+<div class="modal fade" id="proposeProjectModal" tabindex="-1" aria-labelledby="proposeProjectModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="proposeProjectModalLabel">Propose a New Project</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" enctype="multipart/form-data" action="{% url 'propose_project' %}">
+                <p><section>Project proposal requires 100 points. <br>Your Points: {{user.profile.points}}</section></p>
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Image</label>
+                        <input type="file" class="form-control" id="image" name="image" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit Proposal</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

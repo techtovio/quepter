@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container my-4">
+  <!-- Resource Header -->
+  <div class="bg-primary text-white p-4 rounded mb-4">
+    <h2>{{ ebook.title }}</h2>
+  </div>
+  
+  <!-- Resource Overview Section -->
+  <div class="mb-4">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Overview</h5>
+        <p class="card-text">{{ ebook.description }}</p>
+        <p><strong>Type:</strong> {{ ebook.resource_type|title }}</p>
+        <p>
+          <strong>Access:</strong> {{ ebook.access_type|title }} 
+          {% if ebook.access_type == "paid" %}
+            (Points Required: <span class="text-primary">{{ ebook.price }}</span>)
+          {% endif %}
+        </p>
+      </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="mb-4">
+      {% if not user_has_paid %}
+      <a href="{% url 'get_resources' ebook.uuid %}" class="btn btn-primary me-2">Download Resource</a>
+      {% else %}
+      <a href="#" class="btn btn-success">View Online</a>
+      {% endif %}
+    </div>
+    
+    <!-- Embedded Resource Display -->
+    {% if user_has_paid %}
+      <div class="card mb-4">
+        <div class="card-body">
+          {% if ebook.resource_type == "video" %}
+          <div class="ratio ratio-16x9">
+            <iframe src="{{ ebook.video_link }}" allowfullscreen></iframe>
+          </div>
+          {% else %}
+          <embed src="{{ ebook.file.url }}" type="application/pdf" width="100%" height="600px">
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+    
+    <!-- Additional Details -->
+    <div>
+      <p><strong>Downloads:</strong> {{ ebook.download_count }}</p>
+      <p><strong>Uploaded By:</strong> {{ ebook.created_by.username }}</p>
+      <p><strong>Date Uploaded:</strong> {{ ebook.date_uploaded|date:"Y-m-d" }}</p>
+    </div>
+  </div>
+</div>
+{% endblock content %}
