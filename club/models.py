@@ -1,12 +1,22 @@
+import os
+import uuid
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.core.validators import MinValueValidator
-import uuid
-from django.utils.timezone import now, timedelta
+from cryptography.fernet import Fernet
+from dotenv import load_dotenv
+from hiero_sdk_python import (
+    Client,
+    Network,
+    AccountId,
+    PrivateKey,
+    AccountCreateTransaction,
+    TokenAssociateTransaction,
+    ResponseCode
+)
+from django.core.exceptions import ImproperlyConfigured
+import base64
+load_dotenv()
 
-# Possible categories for clubs
 CATEGORIES = [
     ('education', 'Education & Learning'),
     ('business', 'Business & Entrepreneurship'),
@@ -19,26 +29,13 @@ CATEGORIES = [
     ('environment', 'Environment & Sustainability'),
 ]
 
-# Terms and conditions for each category
-CATEGORY_TERMS = {
-    'education': "Focuses on academic discussions, online courses, and study groups.",
-    'business': "Encourages startup ideas, business strategies, and entrepreneurship networking.",
-    'technology': "Explores tech trends, software development, and innovation in AI and machine learning.",
-    'creative': "Promotes art, music, media production, and other creative endeavors.",
-    'health': "Centers around mental and physical wellness, fitness, and health resources.",
-    'sports': "Engages in sports activities, discussions, and events.",
-    'finance': "Covers investment strategies, financial literacy, and cryptocurrency.",
-    'social': "Focuses on community service, volunteering, and social impact projects.",
-    'environment': "Dedicated to environmental awareness, conservation, and sustainability projects."
-}
-
 STATUS_CHOICES = (
     ("Completed", "Completed"),
     ("Pending", "Pending"),
     ("Cancelled", "Cancelled")
 )
 
-# Club model to represent each club
+
 class Club(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
@@ -54,31 +51,75 @@ class Club(models.Model):
     reputation_score = models.FloatField(default=0.0)
     total_qpt = models.DecimalField(max_digits=12, decimal_places=2, default=0.0)
     total_contributions = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
-    annual_return_rate = models.DecimalField(max_digits=5, decimal_places=2, default=10.00)  # Example: 10% annual return
+    annual_return_rate = models.DecimalField(max_digits=5, decimal_places=2, default=10.00)
+    qpt_wallet_balance = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    app_id = models.CharField(max_length=100, null=True, blank=True, unique=True)
+    public_key = models.CharField(max_length=500, null=True, blank=True)
+    qpt_private_key = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.name
     
+    def save(self, *args, **kwargs):
+        """Encrypt private keys before saving."""
+        if self.qpt_private_key:
+            key_str = str(self.qpt_private_key)  # Ensure it's a string
+            if not key_str.startswith("gAAAA"):  # Avoid double encryption
+                self.qpt_private_key = self.encrypt_key(key_str)
+        super().save(*args, **kwargs)
+
+    def encrypt_key(self, key: str) -> str:
+        """
+        Encrypt the private key using Fernet.
+        """
+        try:
+            secret_key = os.getenv('SECRET_KEY')
+            if not secret_key:
+                raise ValueError("Missing SECRET_KEY in environment variables")
+            
+            # Ensure the secret key is 32 bytes long
+            key_bytes = secret_key.encode()
+            key_base64 = base64.urlsafe_b64encode(key_bytes.ljust(32)[:32])
+            f = Fernet(key_base64)
+            return f.encrypt(key.encode()).decode()
+        except Exception as e:
+            raise ValueError(f"Encryption error: {e}")
+
+    def decrypt_key(self) -> str:
+        """
+        Decrypt the private key using Fernet.
+        """
+        try:
+            secret_key = os.getenv('SECRET_KEY')
+            if not secret_key:
+                raise ValueError("Missing SECRET_KEY in environment variables")
+            
+            # Ensure the secret key is 32 bytes long
+            key_bytes = secret_key.encode()
+            key_base64 = base64.urlsafe_b64encode(key_bytes.ljust(32)[:32])
+            f = Fernet(key_base64)
+            return f.decrypt(self.qpt_private_key.encode()).decode()
+        except Exception as e:
+            raise ValueError(f"Decryption error: {e}")
+
+    def __str__(self):
+        return f"{self.name}"
+
     class Meta:
         ordering = ['-reputation_score']
-    
-    # Methods for club statistics
-    def member_count(self):
+
+    def member_count(self) -> int:
+        """Return the number of members in the club."""
         return self.members.count()
 
-    def calculate_annual_returns(self):
+    def calculate_annual_returns(self) -> float:
+        """Calculate and return the annual returns based on total contributions and rate."""
         return (self.total_contributions * self.annual_return_rate) / 100
 
-    def benefits(self):
-        return [
-            "Access to exclusive projects and events.",
-            "Annual dividends based on contributions.",
-            "Networking opportunities with other members.",
-            "Priority consideration for club initiatives.",
-            "Mentorship and training programs.",
-        ]
+    
 
-# Model for a club membership to track user memberships and payments
+
+# --------------------------- CLUB MEMBERSHIP ---------------------------
 class ClubMembership(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
@@ -92,7 +133,7 @@ class ClubMembership(models.Model):
     def loyalty_points(self):
         return self.total_contributed // 10
 
-# Model for broadcasting messages to club members
+# --------------------------- CLUB BROADCAST ---------------------------
 class ClubBroadcast(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     message = models.TextField()
@@ -101,7 +142,18 @@ class ClubBroadcast(models.Model):
     def __str__(self):
         return f"Broadcast in {self.club.name} at {self.created_at}"
 
-# Contribution model to track individual contributions
+# --------------------------- CLUB TRANSACTIONS ---------------------------
+class ClubTransaction(models.Model):
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='transactions')
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    transaction_type = models.CharField(max_length=50)  # Example: "Weekly Contribution", "Project Backing"
+    date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="Completed")
+
+    def __str__(self):
+        return f"{self.club.name} - {self.transaction_type} - {self.amount} QPT"
+
+# --------------------------- CLUB CONTRIBUTION ---------------------------
 class ClubContribution(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='contributions')
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='contributions')
@@ -114,14 +166,28 @@ class ClubContribution(models.Model):
         return f"{self.user.username} - {self.club.name} - {self.amount} KES on {self.date}"
 
     def save(self, *args, **kwargs):
-        # Update user's total contributions and loyalty points
         membership = ClubMembership.objects.get(user=self.user, club=self.club)
-        membership.total_contributed += int(self.amount)
+        membership.total_contributed += self.amount
         membership.save()
-        print(int(self.amount))
 
-        # Update club's total contributions and weekly contributions
-        self.club.total_contributions += int(self.amount)
+        # Update club's total contributions
+        self.club.total_contributions += self.amount
         self.club.save()
+
+        # Convert to QPT and update club's QPT wallet
+        qpt_value = int(self.amount) // 10  # Example: 1 QPT = 10 KES
+        if qpt_value > 0:
+            self.club.total_qpt += qpt_value
+            self.club.qpt_wallet_balance += qpt_value
+
+            # Register the QPT transaction
+            ClubTransaction.objects.create(
+                club=self.club,
+                amount=qpt_value,
+                transaction_type="Weekly Contribution",
+                status="Completed"
+            )
+
+            self.club.save()
 
         super().save(*args, **kwargs)

@@ -12,7 +12,7 @@ import string
 import random
 from dashboard.models import Profile, Success_Story, Notification, Transaction
 from event.models import Event
-from project.models import Project
+from project.models import Proposal as Project
 from django.views.decorators.csrf import csrf_exempt
 from dashboard.SMS import sendSMS
 from django.contrib.auth.models import User

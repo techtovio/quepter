@@ -1,0 +1,111 @@
+# ---- Python ----
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environment
+env/
+venv/
+myenv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+
+# Pip cache
+__pypackages__/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# pyenv
+.python-version
+
+# Testing
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# VSCode settings
+.vscode/
+.vscode/*
+
+# ---- Hedera ----
+# SDK Cache (if applicable)
+hedera_sdk_python/.cache/
+hedera_sdk_python/target/
+hedera_sdk_python/.gradle/
+
+# ---- Logs ----
+*.log
+*.out
+*.err
+
+# ---- OS-specific ----
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# ---- IDEs ----
+.idea/
+*.iml
+*.iws
+*.ipr
+*.bak
+*.swp
+
+# ---- Miscellaneous ----
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*.orig
+*~

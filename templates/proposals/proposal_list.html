@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Projects | Quepter Youth Hub{% endblock title %}
+
+{% block content %}
+<div class="container my-4">
+  <!-- Analytics Section -->
+  <div class="row mb-4">
+    <div class="col">
+      <div class="card text-white" style="background-color: #1A73E8;">
+        <div class="card-body">
+          <h5 class="card-title">Projects Analytics</h5>
+          <p class="card-text">Total Projects: <span class="badge bg-primary">{{ total_projects }}</span></p>
+          <p class="card-text">Accepted Projects: <span class="badge bg-success">{{ accepted_projects }}</span></p>
+          <p class="card-text">Rejected Projects: <span class="badge btn-warning">{{ rejected_projects }}</span></p>
+          <p class="card-text">Pending Projects: <span class="badge bg-secondary">{{ pending_projects }}</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload Resource Button -->
+  <div class="row mb-4">
+    <div class="col text-end">
+        <a href="{% url 'proposal_create' %}">
+      <button type="button" class="btn btn-success" >
+        <i class="bi bi-upload"></i> Propose Project
+      </button></a>
+    </div>
+  </div>
+
+  <!-- Tabs for Resources -->
+  <ul class="nav nav-tabs" id="resourceTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="all-resources-tab" data-bs-toggle="tab" data-bs-target="#all-resources" type="button" role="tab" aria-controls="all-resources" aria-selected="true">Projects</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="my-resources-tab" data-bs-toggle="tab" data-bs-target="#my-resources" type="button" role="tab" aria-controls="my-resources" aria-selected="false">Announcements</button>
+    </li>
+  </ul>
+  <div class="tab-content mt-3" id="resourceTabsContent">
+    <!-- Projects Tab -->
+<div class="tab-pane fade show active" id="all-resources" role="tabpanel" aria-labelledby="all-resources-tab">
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for proposal in proposals %}
+      <div class="col">
+        <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden position-relative transition-all">
+          <!-- Default Images Based on Status -->
+          <img src="{% if proposal.status == 'approved' %}
+                    https://i.pinimg.com/736x/d8/e6/5c/d8e65ca0a23c4ad1bf3d59f3041c84d2.jpg
+                    {% elif proposal.status == 'rejected' %}
+                    https://png.pngtree.com/png-vector/20230418/ourmid/pngtree-rejected-icon-vector-png-image_6712775.png
+                    {% elif proposal.status == 'pending' %}
+                    https://c8.alamy.com/comp/HYCGP6/pending-icon-pending-website-button-on-white-background-HYCGP6.jpg
+                    {% else %}
+                    https://t4.ftcdn.net/jpg/00/58/89/09/360_F_58890925_Exy9irJMZwEbUov7pqcXmirIchPCUXLZ.jpg
+                    {% endif %}"
+               class="card-img-top object-fit-cover"
+               alt="{{ proposal.title }}"
+               style="height: 180px; width: 100%; object-fit: cover;">
+
+          <div class="card-body">
+            <h5 class="card-title text-primary fw-bold">{{ proposal.title }}</h5>
+            <p class="card-text text-muted">{{ proposal.feedback|truncatewords:20 }}</p>
+            <a href="{% url 'proposal_detail' proposal.id %}" class="btn btn-outline-primary w-100 rounded-pill">View Details</a>
+          </div>
+
+          <!-- Status Badge -->
+          <span class="position-absolute top-0 end-0 m-2 badge 
+            {% if proposal.status == 'approved' %} bg-success
+            {% elif proposal.status == 'rejected' %} bg-danger
+            {% elif proposal.status == 'pending' %} bg-warning
+            {% else %} bg-secondary
+            {% endif %}">
+            {{ proposal.status|title }}
+          </span>
+
+          <!-- Club Badge -->
+          <span class="position-absolute bottom-0 start-0 m-2 badge bg-primary text-white px-3 py-1 rounded-pill">
+            {{ proposal.club.name }}
+          </span>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col text-center">
+        <p class="text-muted">No projects/proposals available.</p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+    <!-- Announcements Tab -->
+    <div class="tab-pane fade" id="my-resources" role="tabpanel" aria-labelledby="my-resources-tab">
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        ---
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

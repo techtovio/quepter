@@ -8,13 +8,13 @@ import random
 from datetime import datetime, timedelta
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-#from project.models import Project
 from django.utils import timezone
 from cryptography.fernet import Fernet
 from django.db.models import Sum, Count, Avg
 from club.models import ClubMembership
 from datetime import datetime
 from django.utils.timezone import now
+from django.db.models import Count, F, Q, Sum
 
 # Generate or retrieve your encryption key safely in the settings file
 from django.conf import settings
@@ -98,6 +98,13 @@ GENDER_CHOICES = (
     ('None', 'Prefer not to say')
 )
 
+class Skill(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
@@ -115,76 +122,82 @@ class Profile(models.Model):
     shares = models.PositiveIntegerField(default=0)
     is_verified = models.BooleanField(default=False)
     is_pro = models.BooleanField(default=False)
+    reputation_score = models.IntegerField(default=1)
     points = models.DecimalField(default=0, decimal_places=2, max_digits=12)
     is_admin = models.BooleanField(default=False)
+    skills = models.ManyToManyField(Skill, related_name="profiles", blank=True)
 
-    def notifications(self):
-        return Notification.objects.filter(user=self.user).count()
+    def notifications_count(self) -> int:
+        """Returns the count of notifications for the user."""
+        return self.user.notifications.filter(is_read=False).count()
 
-    def name(self):
+    def name(self) -> str:
         return self.user.get_full_name()
-    
-    def account_age(self):
+
+    def account_age(self) -> int:
         """Calculate account age in months."""
         if self.user.date_joined:
-            delta = now() - self.user.date_joined
-            return delta.days // 30  # Convert days to months
+            return (now() - self.user.date_joined).days // 30
         return 0
     
     def user_clubs(self):
-        clubs = ClubMembership.objects.filter(user=self.user)
+        """Returns a list of club categories the user belongs to."""
+        from .models import ClubMembership  # Import only when needed to avoid circular import
 
-        my_clubs = []
+        clubs = ClubMembership.objects.filter(user=self.user).select_related('club__category')
+        return [c.club.category for c in clubs]
 
-        for c in clubs:
-            club = c.club
-            category = club.category
-            my_clubs.append(category)
-        
-        return my_clubs
-
-    def rank_score(self):
+    def rank_score(self) -> float:
         """
-        Calculates a score to rank users based on points, funds, and number of referred friends.
-        Adjust the weights as needed for better results.
+        Calculates a score to rank users based on:
+            - points (weight = 0.5)
+            - funds (weight = 0.1)
+            - number of referred friends (weight = 0.2)
         """
-        # Define weights for each factor
         points_weight = 0.5
         funds_weight = 0.1
         referrals_weight = 0.2
 
-        # Calculate the score
-        score = (
-            float(self.points) * points_weight +
+        return round(
+            self.points * points_weight +
             float(self.funds) * funds_weight +
-            self.referred_friends.count() * referrals_weight
+            self.referred_friends.count() * referrals_weight,
+            2
         )
-        return round(score, 2)
 
-    def rank(self):
+    def rank(self) -> int | None:
         """
         Calculates the user's rank compared to other profiles based on their rank score.
+        Uses direct query-based ranking for better performance.
         """
-        # Get all profiles with their scores
-        profiles = Profile.objects.all()
-        ranked_profiles = sorted(
-            profiles, key=lambda profile: profile.rank_score(), reverse=True
-        )
+        profiles = Profile.objects.annotate(
+            rank_score=(
+                F("points") * 0.5 +
+                F("funds") * 0.1 +
+                Count("referred_friends") * 0.2
+            )
+        ).order_by('-rank_score')
 
-        # Find the rank position of the current profile
-        for index, profile in enumerate(ranked_profiles, start=1):
-            if profile.user == self.user:
-                return index
-        return None
+        # Get rank using position
+        ranked_profiles = list(profiles.values_list('id', flat=True))
+        try:
+            return ranked_profiles.index(self.id) + 1
+        except ValueError:
+            return None
 
     @classmethod
     def ranked_profiles(cls):
         """
-        Returns a queryset of profiles sorted by their rank score in descending order.
+        Returns a queryset of profiles sorted by rank score in descending order.
+        Uses annotation for direct sorting.
         """
-        profiles = cls.objects.all()
-        ranked_profiles = sorted(profiles, key=lambda profile: profile.rank_score(), reverse=True)
-        return ranked_profiles
+        return cls.objects.annotate(
+            rank_score=(
+                F("points") * 0.5 +
+                F("funds") * 0.1 +
+                Count("referred_friends") * 0.2
+            )
+        ).order_by('-rank_score')
 
     def __str__(self):
         return self.name()

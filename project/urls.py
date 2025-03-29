@@ -1,12 +1,9 @@
 from django.urls import path
-from . import views
+from .views import ProposalCreateView, ProposalListView, ProposalDetailView, proposal_feedback
 
 urlpatterns = [
-    path('project/<uuid:uuid>/', views.project_detail, name='project_detail'),
-    path('send-message/', views.send_message, name='send_message'),
-    path('propose_project/', views.propose_project, name='propose_project'),
-    path('get_user_points/', views.get_user_points, name='get_user_points'),
-    path('projects/all/', views.projects, name='projects'),
-    path('submit-proposal/', views.submit_proposal, name='submit-proposal'),
-    path('back-project/', views.back_project, name='back-project'),
+    path('create/', ProposalCreateView.as_view(), name='proposal_create'),
+    path('projects/', ProposalListView.as_view(), name='proposal_list'),
+    path('project/<uuid:pk>/', ProposalDetailView.as_view(), name='proposal_detail'),
+    path('<uuid:pk>/feedback/', proposal_feedback, name='proposal_feedback'),
 ]

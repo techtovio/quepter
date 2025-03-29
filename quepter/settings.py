@@ -1,11 +1,7 @@
 import os
 from pathlib import Path
-
-from cryptography.fernet import Fernet
-
-# Generate an encryption key once, and save it in a safe place
-# You can generate a key by: Fernet.generate_key()
-ENCRYPTION_KEY = os.getenv("ENCRYPTION_KEY", default="YOUR_GENERATED_KEY")
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,10 +11,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-8&i26k-poxo%h1&#7elw%v_@@%8psm=4hn2-%n+o)61d7mdign'
+SECRET_KEY = os.getenv("SECRET_KEY_DJANGO")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG")
 
 ALLOWED_HOSTS = ['*']
 
@@ -34,7 +30,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'dashboard',
     'event',
-    'job',
     'post',
     'project',
     'account',
@@ -44,6 +39,8 @@ INSTALLED_APPS = [
     'p2p',
     'leaderboard',
     'club',
+    'wallet',
+    'talent',
 ]
 
 MIDDLEWARE = [
@@ -140,8 +137,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Mailing Services
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'officialbotproffesor@gmail.com'
-EMAIL_HOST_PASSWORD = 'qijo qlev rczo yhah'
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_USER")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False

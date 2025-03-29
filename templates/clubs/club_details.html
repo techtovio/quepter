@@ -20,6 +20,8 @@
                         <li class="list-group-item">Weekly Contribution: <span class="fw-bold">KES {{ weekly_contributions|default:"0.00" }}</span></li>
                         <li class="list-group-item">My Contributions: <span class="fw-bold">KES {{ total_contributions|default:"0.00" }}</span></li>
                         <li class="list-group-item">Annual Returns (Estimated): <span class="fw-bold">KES {{ annual_returns|default:"0.00" }}</span></li>
+                        <li class="list-group-item">Assets: <span class="badge bg-primary">soon</span></li>
+                        <li class="list-group-item">Treasury Wallet: <span class="badge bg-secondary">{{club.public_key}}</span></li>
                         <li class="list-group-item">Loyalty Points : <span class="fw-bold">{{ loyalty_points|default:"0.00" }} points</span></li>
                         <li class="list-group-item">Membership Status: <span class="badge bg-success">Active</span></li>
                     </ul>
@@ -39,15 +41,14 @@
                     </div>
 
                     <!-- Benefits of Joining -->
-                    <h5>Why You’ll Benefit</h5>
-                    <p>{{ club.benefits }}</p>
+
 
                     <!-- How Interests are Generated -->
-                    <h5>How Interests are Generated</h5>
-                    <p>{{ club.interest_generation }}</p>
+
 
                     <!-- Weekly Contribution Form -->
                     <h5>Contribute Weekly Money</h5>
+                    <p><b>Contributed money will be converted to QPT once a month. <br>HCS will then track all conversions for club intergrity and transparency. <br> All contributions can be viewed by club members alone. <br> Donations and Support is accepted and will be transfered to club treasury Wallet.</b></p>
                     <form method="POST" action="{% url 'contribute_to_club' club.uuid %}" class="d-flex">
                         {% csrf_token %}
                         <input type="number" name="amount" class="form-control me-2" placeholder="Enter amount (KES)" required>

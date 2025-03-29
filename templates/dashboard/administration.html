@@ -371,66 +371,7 @@
       <!--/ Transactions -->
     </div>
 </div>
-
-<!-- Create Job Modal -->
-<div class="modal fade" id="createJobModal" tabindex="-1" aria-labelledby="createJobModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <form id="createJobForm" action="{% url 'create_job' %}" method="POST">
-          {% csrf_token %}
-          <div class="modal-header">
-            <h5 class="modal-title" id="createJobModalLabel">Create New Job</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="newJobTitle" class="form-label">Job Title</label>
-              <input type="text" class="form-control" id="newJobTitle" name="title" required>
-            </div>
-            <div class="mb-3">
-              <label for="newJobTitle" class="form-label">Job Category</label>
-              <select name="job_category" id="job_category" class="form-control" required>
-                <option value=""> Category..</option>
-                <option value="education">Education & Learning</option>
-                <option value="business">Business & Entrepreneurship</option>
-                <option value="technology">Technology & Innovation</option>
-                <option value="creative">Creative Arts & Media</option>
-                <option value="health">Health & Wellness</option>
-                <option value="sports">Sports & Recreation</option>
-                <option value="finance">Finance & Investment</option>
-                <option value="social">Social Impact & Community Service</option>
-                <option value="environment">Environment & Sustainability</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="newJobDescription" class="form-label">Description</label>
-              <textarea class="form-control" id="newJobDescription" name="description"></textarea>
-            </div>
-            <div class="mb-3">
-              <label for="newJobRequirements" class="form-label">Requirements</label>
-              <textarea class="form-control" id="newJobRequirements" name="requirements"></textarea>
-            </div>
-            <div class="mb-3">
-              <label for="newJobLocation" class="form-label">Location</label>
-              <input type="text" class="form-control" id="newJobLocation" name="location" required>
-            </div>
-            <div class="mb-3">
-              <label for="newJobSalary" class="form-label">Salary</label>
-              <input type="text" class="form-control" id="newJobSalary" name="salary" required>
-            </div>
-            <div class="mb-3">
-              <label for="applicationDeadLine" class="form-label">Deadline</label>
-              <input type="date" class="form-control" id="applicationDeadLine" name="deadline" required>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-success">Create Job</button>
-          </div>
-        </form>
-      </div>
-    </div>
-</div>
+ 
 
 <!-- Create Event Modal -->
 <div class="modal fade" id="createEventModal" tabindex="-1" aria-labelledby="createEventModalLabel" aria-hidden="true">

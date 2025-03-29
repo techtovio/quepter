@@ -13,8 +13,6 @@ from django.utils import timezone
 import string
 import random
 from event.models import Event
-from project.models import Project
-from job.models import JobPosition, JobApplication
 from post.models import CommunityPost
 from dashboard.models import Profile, Verify, Transaction, Notification, Contribute, Mentorship, Success_Story, Message, Blog, Funding
 from django.views.decorators.csrf import csrf_exempt
@@ -22,6 +20,10 @@ from dashboard.SMS import sendSMS
 from investment.models import InvestmentOpportunity, MemberInvestmentRequest
 from voting.models import LeadershipPosition, Vote
 from decimal import Decimal
+import os
+from project.models import Proposal as Project
+from dotenv import load_dotenv
+load_dotenv()
 
 def id_generator(size=8, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
@@ -45,12 +47,10 @@ def donate(request):
 def about(request):
     success_story = Success_Story.objects.all()
     events = Event.objects.filter(is_completed=False)
-    projects = Project.objects.all()
     events = Event.objects.all()
     content = {
         'success_story':success_story,
         'events':events,
-        'projects':projects,
         'events':events,
     }
     return render(request, 'about.html', content)
@@ -105,10 +105,8 @@ def dashboard(request):
     context = {
         'profile':Profile.objects.get(user=user),
         'notifications':Notification.objects.filter(user=user),
-        'projects':Project.objects.filter(participants=request.user),
         'time':time,
         'all_projects':Project.objects.all(),
-        'opportunities': JobPosition.objects.all(),
         'feed': feed,
         'events': Event.objects.all(),
         'mentorships': mentorships,
@@ -170,7 +168,7 @@ def pay_mpesa(request):
             reference = id_generator()
             ua = {
                     'Content-Type': 'application/json',
-                    'Authorization':'Basic WDFkN3VBYVYzTUxsYjI1VmNhS2U6UHBEMlFnVkMxUXJOalNWTWU4bHhXejd6RFVNNWwzcldnQlcwZkR6cQ==',
+                    'Authorization':f'{os.getenv("HEDERA_AUTH")}',
                 }
             url = 'https://backend.payhero.co.ke/api/v2/payments'
             
@@ -463,7 +461,6 @@ def administration(request):
     user = request.user
     if user.profile.is_admin:
         context = {
-            'jobs':JobPosition.objects.all(),
             'projects':Project.objects.all(),
             'events':Event.objects.all(),
             'transactions':Transaction.objects.all(),

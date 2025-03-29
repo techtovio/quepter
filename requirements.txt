@@ -1,0 +1,9 @@
+requests
+pandas
+scikit-learn
+django
+hiero_sdk_python
+Pillow
+djangorestframework
+python-dotenv
+xgboost
