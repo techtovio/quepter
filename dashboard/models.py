@@ -158,12 +158,12 @@ class Profile(models.Model):
         funds_weight = 0.1
         referrals_weight = 0.2
 
-        return round(
-            self.points * points_weight +
+        return float(round(
+            float(self.points) * points_weight +
             float(self.funds) * funds_weight +
             self.referred_friends.count() * referrals_weight,
             2
-        )
+        ))
 
     def rank(self) -> int | None:
         """

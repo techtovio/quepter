@@ -14,7 +14,10 @@ from wallet.contracts.hedera import load_operator_credentials, create_new_accoun
 load_dotenv()
 from wallet.contracts import mirror_node
 from django.views.decorators.cache import never_cache
-
+from django.contrib import messages
+from django.views.decorators.http import require_GET
+import requests
+from dashboard.models import Profile
 from hiero_sdk_python import (
     Client,
     AccountId,
@@ -24,13 +27,17 @@ from hiero_sdk_python import (
     TokenAssociateTransaction,
     TokenId
 )
+from decimal import Decimal
+from django.http import HttpResponseRedirect
 
 @login_required
 def wallet_details(request):
     wallet = get_object_or_404(UserWallet, user=request.user)
+    qpt_balance = mirror_node.get_token_balance_for_account(account_id=wallet.recipient_id, token_id=os.getenv('Token_ID'))
     context = {
-        'qpt_public_key': wallet.qpt_public_key,
+        'qpt_public_key': wallet.qpt_public_key.split("hex=")[-1].strip(">"),
         'recipient_id': wallet.recipient_id,
+        'qpt_balance': qpt_balance,
     }
     return render(request, 'wallet/wallet_details.html', context)
 
@@ -157,8 +164,10 @@ def transfer_tokens(operator_id_sender, operator_key_sender, recipient_id, amoun
     try:
         receipt = transaction.execute(client)
         print("Token transfer successful.")
+        return True
     except Exception as e:
         print(f"Token transfer failed: {str(e)}")
+        return False
 
 def fund_clubs(request):
     clubs = Club.objects.all()#ADMIN_KEY
@@ -169,15 +178,30 @@ def fund_clubs(request):
         transfer_tokens(operator_id_sender=operator_id, operator_key_sender=operator_key, recipient_id=recipient_id, amount=1000)
     return render(request, 'contracts/assign_user_wallet.html')
 
-from django.http import JsonResponse
-from django.views.decorators.http import require_GET
-import requests
-import os
-from dotenv import load_dotenv
+def buy_qpt(request):
+    if request.method == 'POST':
+        amount = request.POST['amount']
+        f_amount = float(amount)
+        operator_id = AccountId.from_string(os.getenv('OPERATOR_ID'))
+        operator_key = PrivateKey.from_string(os.getenv('OPERATOR_KEY'))
+        recipient_id = AccountId.from_string(request.user.wallet.recipient_id)
+        print(float(request.user.profile.funds))
+        print(float(request.user.profile.funds) > float(f_amount*10))
+        if float(request.user.profile.funds) >= float(f_amount*10):
+            buy = transfer_tokens(operator_id_sender=operator_id, operator_key_sender=operator_key, recipient_id=recipient_id, amount=int(amount))
+            if buy == True:
+                profile = Profile.objects.get(user=request.user)
+                profile.funds -= Decimal(f_amount*10)
+                profile.save()
+                messages.success(request, f'QPT Purchase was successful, {amount} QPT has been transfered to your wallet')
+            else:
+                messages.warning(request, 'An error occured while trying to purchase QPT, please try again.')
+        else:
+            messages.warning(request, f"You don't have sufficient funds to purchase {amount} QPT, please add funds and try again.")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-load_dotenv()
 
-TESTNET_MIRROR_URL = "https://testnet.mirrornode.hedera.com/api/v1"
+TESTNET_MIRROR_URL = os.getenv('MIRROR_URL')#"https://testnet.mirrornode.hedera.com/api/v1"
 
 @never_cache
 def token_info(request):

@@ -18,7 +18,6 @@ from dashboard.models import Profile, Verify, Transaction, Notification, Contrib
 from django.views.decorators.csrf import csrf_exempt
 from dashboard.SMS import sendSMS
 from investment.models import InvestmentOpportunity, MemberInvestmentRequest
-from voting.models import LeadershipPosition, Vote
 from decimal import Decimal
 import os
 from project.models import Proposal as Project
@@ -466,7 +465,6 @@ def administration(request):
             'transactions':Transaction.objects.all(),
             'investments':InvestmentOpportunity.objects.all(),
             'members':Profile.objects.all(),
-            'leadership': LeadershipPosition.objects.all(),
             'notifications':Notification.objects.filter(user=user),
 
         }

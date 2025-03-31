@@ -34,13 +34,13 @@ INSTALLED_APPS = [
     'project',
     'account',
     'learning',
-    'voting',
     'investment',
     'p2p',
     'leaderboard',
     'club',
     'wallet',
     'talent',
+    'dao',
 ]
 
 MIDDLEWARE = [

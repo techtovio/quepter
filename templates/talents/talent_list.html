@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-5">Discover Talents</h1>
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'create_talent' %}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Add Your Talent
+        </a>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        <!-- Category Filter -->
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5>Categories</h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <a href="?category=all" class="text-decoration-none">All Categories</a>
+                        </li>
+                        {% for value, label in categories.items %}
+                        <li class="list-group-item">
+                            <a href="?category={{ value }}" class="text-decoration-none">{{ label }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Talent List -->
+        <div class="col-md-9">
+            <div class="row">
+                {% for talent in talents %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="{{ talent.profile_image.url|default:'/static/images/default-profile.jpg' }}" 
+                             class="card-img-top" alt="{{ talent.name }}" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h5 class="card-title mb-1">{{ talent.name }}</h5>
+                                <span class="badge bg-primary">{{ talent.get_category_display }}</span>
+                            </div>
+                            <p class="text-muted small mb-2">{{ talent.club.name }}</p>
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="text-warning">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= talent.avg_rating|default:0 %}
+                                            <i class="bi bi-star-fill"></i>
+                                        {% else %}
+                                            <i class="bi bi-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <small class="text-muted ms-2">({{ talent.review_count }} reviews)</small>
+                            </div>
+                            <p class="card-text text-truncate">{{ talent.bio }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">${{ talent.price_per_hour }}/hr</h5>
+                                <a href="{% url 'talent_detail' talent.uuid %}" class="btn btn-sm btn-outline-primary">
+                                    View Profile
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-info">No talents found.</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

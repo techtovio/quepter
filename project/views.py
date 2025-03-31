@@ -75,8 +75,9 @@ class ProposalCreateView(View):
                     messages.warning(request, f'You must be a member of {club} before proposing a project under this club.')
                     return redirect('proposal_create')
                 balance = mirror_node.get_token_balance_for_account(account_id=wallet.recipient_id, token_id=token_id)
-                if balance >= 10:
-                    transaction = transfer_tokens(operator_id_sender=operator_id, operator_key_sender=operator_key, recipient_id=club_id, amount=10)
+                if balance >= 2:
+                    transaction = transfer_tokens(operator_id_sender=operator_id, operator_key_sender=operator_key, recipient_id=club_id, amount=2)
+                    print(transaction)
                     if transaction == True:
                         proposal = form.save(commit=False)
                         proposal.created_by = request.user
@@ -94,6 +95,7 @@ class ProposalCreateView(View):
                         return redirect('proposal_create')
                     else:
                         messages.warning(request, 'An Error occured while trying to transfer your QPT, please try again later')
+                        return redirect('proposal_create')
                 else:
                     messages.warning(request, f'You have insufficient QPT to propose a project, your QPT balance is {balance}.')
                     return redirect('proposal_create')

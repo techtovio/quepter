@@ -7,27 +7,75 @@ from django.contrib.auth.models import User
 from django.db import transaction
 from dashboard.models import Profile, Notification
 import json
+import requests
+import os
+from wallet.contracts import mirror_node
+from wallet.models import UserWallet
+from dotenv import load_dotenv
+from hiero_sdk_python import (
+    Client,
+    AccountId,
+    PrivateKey,
+    TransferTransaction,
+    Network,
+    TokenAssociateTransaction,
+    TokenId
+)
+
+load_dotenv()
+MIRROR_URL = os.getenv('MIRROR_URL')
+print(MIRROR_URL)
+
+def transfer_tokens(operator_id_sender, operator_key_sender, recipient_id, amount):
+    network_type = os.getenv('NETWORK')
+    network = Network(network=network_type)
+    client = Client(network)
+
+    operator_id = AccountId.from_string(os.getenv('OPERATOR_ID'))
+    operator_key = PrivateKey.from_string(os.getenv('OPERATOR_KEY'))
+    token_id = TokenId.from_string(os.getenv('Token_ID'))
+
+    client.set_operator(operator_id, operator_key)
+
+    transaction = (
+        TransferTransaction()
+        .add_token_transfer(token_id, operator_id_sender, -amount)
+        .add_token_transfer(token_id, recipient_id, amount)
+        .freeze_with(client)
+        .sign(operator_key_sender)
+    )
+
+    try:
+        receipt = transaction.execute(client)
+        print("Token transfer successful.")
+    except Exception as e:
+        print(f"Token transfer failed: {str(e)}")
 
 @login_required(login_url='login')
 def p2p(request):
-    return render(request, "dashboard/p2p.html", {'notifications':Notification.objects.filter(user=request.user),})
+    return render(request, "p2p/p2p.html", {'notifications':Notification.objects.filter(user=request.user),})
 
 @login_required
 def sell_points(request):
     if request.method == 'POST':
         points = int(request.POST.get('points'))
         price = float(request.POST.get('price'))
-
         seller = request.user
-        if seller.profile.points >= points:
+        wallet = UserWallet.objects.get(user=seller)
+        wallet_id = wallet.recipient_id
+        balance = mirror_node.get_token_balance_for_account(account_id=wallet_id, token_id=os.getenv('Token_ID'))
+        if balance >= points:
             with transaction.atomic():
                 PointSale.objects.create(seller=seller, points=points, price=price)
-                seller.profile.points -= points
-                seller.profile.save()
+                #seller.profile.points -= points
+                operator_id = AccountId.from_string(request.user.wallet.recipient_id)
+                operator_key = PrivateKey.from_string(request.user.wallet.decrypt_key().split("hex=")[-1].strip(">"))
+                transfer_tokens(operator_id_sender=operator_id, operator_key_sender=operator_key, recipient_id=recipient_id, amount=1000)
+                #seller.profile.save()
                 Notification.objects.create(
                     user=seller,
-                    title="Points Listed Successfully",
-                    message=f"Dear {seller.first_name}, you have successfully listed {points} for sale at kes {price} per point"
+                    title="QPT Listed Successfully",
+                    message=f"Dear {seller.first_name}, you have successfully listed {points} QPT for sale at kes {price} per QPT"
                 )
                 return JsonResponse({'status': 'success', 'message': 'Points listed for sale!'}, status=200)
         else:
