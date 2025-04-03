@@ -390,9 +390,9 @@ class HederaService:
 
 try:
     token_id = HederaService.create_token(
-        token_name="Quepter",
-        token_symbol="QUEP",
-        decimals=8,
+        token_name="Healthra",
+        token_symbol="HLT",
+        decimals=2,
         initial_supply=100_000_000
     )
     print(f"Created token: {token_id}")

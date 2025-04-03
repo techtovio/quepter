@@ -23,7 +23,7 @@ def create_topic():
 
     transaction = (
         TopicCreateTransaction(
-            memo="Python SDK created topic",
+            memo="Healthra Insurance",
             admin_key=operator_key.public_key()
         )
         .freeze_with(client)

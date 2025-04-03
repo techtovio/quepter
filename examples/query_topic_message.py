@@ -7,6 +7,7 @@ from hiero_sdk_python import Network, Client, TopicMessageQuery
 
 load_dotenv()
 
+print(os.getenv('HEALHRA_POOL_ID'))
 def query_topic_messages():
     network = Network(network='testnet')
     client = Client(network)
