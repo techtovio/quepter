@@ -1,145 +1,134 @@
----
-
-🚀 Quepter Youth Hub | Empowering the Future with Blockchain & AI
-
-> Decentralized | AI-Enhanced | Community-Driven
-
-
-
-🌍 Quepter Youth Hub is a cutting-edge blockchain-powered ecosystem designed to empower youth, fund projects, and create opportunities through decentralized finance, AI mentorship, and skill-based rewards.
-
-🔗 Built on Hedera Hashgraph, Quepter integrates real-time tokenomics, AI-driven evaluations, and seamless peer-to-peer transactions—all in a secure, transparent, and gamified environment.
-
-
----
-
-🔥 Core Features
-
-🎭 1. Clubs & Treasury Wallets (The Powerhouses)
-
-🏛️ Each club acts as a decentralized hub with its own treasury wallet—funded by:
-✅ Talent Competitions 🎤
-✅ Project Proposal Fees 🏗️
-✅ Member Contributions (Fiat → QPT for liquidity) 💰
-
-🔹 Clubs manage funds, support projects, and reward members, ensuring a self-sustaining economy.
-
-
----
-
-🚀 2. Project Proposals (Fueling Innovation)
-
-💡 Members propose projects by staking QPT tokens.
-🤖 AI Agent Evaluates each proposal, updating the status to:
-🔵 Accepted | 🟡 Pending | 🔴 Rejected
-
-🎯 Funding Flow:
-1️⃣ Proposal fee → Sent to the club's treasury wallet.
-2️⃣ Members back projects by investing QPT, fueling community-led ventures.
-
-
----
-
-💳 3. Personal Wallets (Your Financial Command Center)
-
-👤 Every member has a secure, personal wallet to:
-💰 Buy, Send & Transfer QPT
-🔄 Deposit Fiat (KES via M-Pesa)
-💸 Withdraw funds (KES - Coming Soon)
-
-📊 Real-time updates ensure you’re always in control of your assets.
-
-
----
-
-🔄 4. Peer-to-Peer (P2P) Trading (Seamless & Instant)
-
-🤝 Members can exchange QPT with fiat (KES) directly through a trustless P2P system.
-⚡ Fast, secure, and transparent—enabling true financial freedom.
-
-
----
-
-🏆 5. Talent Competitions (Earn & Shine)
-
-🎤 Compete in challenges, showcase skills, and stake QPT to win big!
-🏅 Winners receive prizes + reputation boosts, fueling creativity & talent discovery.
-
-
----
-
-🏛 6. Decentralized Governance (DAO) [Coming Soon]
-
-🗳 Community-Led Decisions—vote on proposals, treasury allocation & platform upgrades.
-🌍 True decentralization with transparency & fairness at its core.
-
-
----
-
-🎓 7. AI-Enhanced Mentorship [Coming Soon]
-
-🔗 AI-powered skill-matching connects mentees with industry leaders & experts.
-🛠️ Auto-generated mentorship programs per club, ensuring guided growth & success.
-
-
----
-
-📚 8. Learning Hub [Coming Soon]
-
-📖 Earn QPT tokens by learning!
-🛠️ Explore free & paid resources—empowering education & skill-building.
-
-
----
-
-📊 9. Real-Time Tokenomics Dashboard (Track & Analyze)
-
-📈 Stay updated on QPT circulation, transactions, and community engagement.
-🚀 Data-driven insights help members make smart investment decisions.
-
-
----
-
-🌍 10. Community Forum (Connect, Share, Grow)
-
-💬 Discuss ideas, seek advice, and collaborate within clubs.
-🌟 A space for networking, innovation, and knowledge exchange.
-
-
----
-
-🏦 QPT Tokenomics (100 Million QPT Supply)
-
-🚀 QPT powers the entire Quepter ecosystem!
-📊 Distribution Model:
-🔹 Clubs Treasury – Funds projects & community incentives.
-🔹 Liquidity Reserves – Ensures smooth P2P trading.
-🔹 Rewards Pool – Used for competitions, learning, & mentorship incentives.
-
-🔗 Dynamic, fair & designed for long-term sustainability!
-
-
----
-
-🌟 How It All Works!
-
-
----
-
-🌎 Why Quepter?
-
-🚀 Innovation Meets Decentralization → AI + Blockchain = A Smarter Ecosystem
-🔒 Secure & Transparent → Built on Hedera, ensuring trust & efficiency
-💡 Empowering the Youth → Opportunities for funding, learning, & mentorship
-
-
----
-
-🎉 Join the Revolution!
-
-Be part of the future! Whether you’re a visionary entrepreneur, creative talent, or community leader, Quepter is where your ideas turn into reality.
-
-🚀 Let’s build the future together!
-
-
----
+# 🚀 Quepter Youth Hub - Project Setup Guide
+
+## 🌍 Project Overview
+Quepter Youth Hub is a cutting-edge blockchain-powered ecosystem built on Hedera Hashgraph, designed to empower youth through decentralized finance, AI mentorship, and skill-based rewards. This Django-based platform integrates real-time tokenomics, AI-driven evaluations, and seamless peer-to-peer transactions.
+
+## 🛠️ Technologies Used
+- **Backend**: Django
+- **Frontend**: HTML, CSS, SCSS, JavaScript & Bootstrap
+- **Blockchain**: Hedera Hashgraph (using Hiero SDK)
+- **Database**: PostgreSQL (default is SQLite for development)
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Python 3.8+
+- pip
+- virtualenv (recommended)
+- PostgreSQL (for production)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone github.com/techtovio/quepter
+   cd quepter
+   ```
+
+2. **Create and activate virtual environment**
+   ```bash
+   python -m venv venv
+   # On Windows:
+   venv\Scripts\activate
+   # On macOS/Linux:
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Set up environment variables**
+   Create a `.env` file in the project root with the following variables:
+   ```
+   SECRET_KEY=your-django-secret-key
+   DEBUG=True
+   NETWORK=testnet  # or mainnet for production
+   OPERATOR_ID=0.0.xxxx
+   OPERATOR_KEY=302e...
+   Token_ID=0.0.xxxx
+   DATABASE_URL=postgres://user:password@localhost:5432/quepter
+   ```
+
+5. **Database setup**
+   For development (SQLite):
+   ```bash
+   python manage.py migrate
+   ```
+   
+   For production (PostgreSQL):
+   ```bash
+   psql -c "CREATE DATABASE quepter;"
+   python manage.py migrate
+   ```
+
+6. **Create superuser**
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+### Running the Development Server
+```bash
+python manage.py runserver
+```
+
+The application will be available at `http://localhost:8000`
+
+## 🔗 Hedera Integration Setup
+
+1. **Hiero SDK Configuration**
+   The project uses Hiero SDK for Hedera Hashgraph integration. Ensure your operator credentials are correctly set in the `.env` file.
+
+2. **Testing Token Transfers**
+   You can test the QPT token transfers using the provided functions in `wallet/contracts/hedera.py`:
+   ```python
+   from wallet.contracts.hedera import transfer_tokens, query_balance
+   
+   # Example usage
+   sender_id = "0.0.xxxx"
+   sender_key = "302e..."
+   recipient_id = "0.0.xxxx"
+   amount = 100  # in tinybars
+   
+   # Transfer tokens
+   transfer_tokens(sender_id, sender_key, recipient_id, amount)
+   
+   # Query balance
+   balance = query_balance(recipient_id)
+   print(f"Recipient balance: {balance}")
+   ```
+
+## 🏗️ Project Structure
+```
+quepter-youth-hub/
+├── accounts/          # User authentication apps
+├── clubs/             # Club management functionality
+├── proposals/         # Project proposal system
+├── wallet/            # Crypto wallet functionality
+│   ├── contracts/
+│   │   └── hedera.py  # Hedera integration
+├── manage.py          # Django management script
+└── requirements.txt   # Project dependencies
+```
+
+## 🌟 Key Features Implemented
+1. **User Authentication System**
+2. **Club Management with Treasury Wallets**
+3. **Project Proposal System with AI Evaluation**
+4. **QPT Token Wallet Integration**
+5. **Peer-to-Peer Trading System**
+6. **Talent Competition Platform**
+
+## 🚨 Troubleshooting
+- **Hedera Connection Issues**: Verify your operator credentials and network settings
+- **Transaction Failures**: Ensure sufficient account balance for gas fees
+- **Database Errors**: Check your database connection strings in `.env`
+
+## 📜 License
+MIT
+
+## 🌎 Join the Quepter Revolution!
+Help us build the future of youth empowerment through blockchain and AI technologies!
+
+For any questions or support, please contact kembohititoh@gmail.com.
