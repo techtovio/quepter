@@ -32,6 +32,28 @@
     .table-hover tbody tr:hover {
         background-color: rgba(0, 123, 255, 0.05);
     }
+    
+    /* Loading spinner for buy button */
+    .btn-loading {
+        position: relative;
+        pointer-events: none;
+    }
+    .btn-loading:after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 20px;
+        height: 20px;
+        margin: -10px 0 0 -10px;
+        border: 2px solid rgba(255,255,255,0.5);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
 </style>
 
 <div class="container-fluid py-4">
@@ -54,10 +76,10 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h5 class="card-title text-muted mb-1">QPT Balance</h5>
-                            <h2 class="mb-0" id="qpt-balance">{{ qpt_balance }}</h2>
+                            <h2 class="mb-0" id="qpt-balance">{{ qpt_balance|floatformat:2 }}</h2>
                         </div>
-                        <div class="icon-shape bg-primary bg-opacity-10 text-white rounded-circle p-3">
-                            <i class="bi bi-currency-exchange fs-2"></i>
+                        <div class="icon-shape bg-primary bg-opacity-10 text-primary rounded-circle">
+                            <i class="bi bi-coin fs-2 text-white"></i>
                         </div>
                     </div>
                 </div>
@@ -68,16 +90,16 @@
         <div class="col-md-6">
             <div class="card shadow-sm border-0">
                 <div class="card-body">
-                    <h5 class="card-title text-muted mb-3">Quick Actions ( QPT )</h5>
-                    <div class="d-flex gap-2">
+                    <h5 class="card-title text-muted mb-3">Quick Actions (QPT)</h5>
+                    <div class="d-flex gap-2 flex-wrap">
                         <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#receiveModal">
-                            <i class="bi bi-download me-1"></i> Receive
+                            <i class="bi bi-wallet2 me-1"></i> Receive
                         </button>
                         <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#sendModal">
                             <i class="bi bi-send me-1"></i> Send
                         </button>
                         <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#buyModal">
-                            <i class="bi bi-send me-1"></i> Buy
+                            <i class="bi bi-cart me-1"></i> Buy
                         </button>
                         <button class="btn btn-sm btn-outline-primary" onclick="loadTransactionHistory()">
                             <i class="bi bi-clock-history me-1"></i> History
@@ -89,7 +111,7 @@
     </div>
     <hr>
 
-    <!-- Wallet Cards -->
+    <!-- Fiat Balance Cards -->
     <div class="row mb-4">
         <!-- Balance Card -->
         <div class="col-md-6">
@@ -98,10 +120,10 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h5 class="card-title text-muted mb-1">Fiat Balance</h5>
-                            <h2 class="mb-0" id="qpt-balance">KES {{ user.profile.funds }}</h2>
+                            <h2 class="mb-0" >KES {{ user.profile.funds|floatformat:2 }}</h2>
                         </div>
-                        <div class="icon-shape bg-success bg-opacity-10 text-white rounded-circle p-3">
-                            <i class="bi bi-currency-exchange fs-2"></i>
+                        <div class="icon-shape bg-success bg-opacity-10 text-success rounded-circle">
+                            <i class="bi bi-cash-coin fs-2 text-white"></i>
                         </div>
                     </div>
                 </div>
@@ -112,13 +134,13 @@
         <div class="col-md-6">
             <div class="card shadow-sm border-0">
                 <div class="card-body">
-                    <h5 class="card-title text-muted mb-3">Quick Actions ( Fiat )</h5>
-                    <div class="d-flex gap-2">
+                    <h5 class="card-title text-muted mb-3">Quick Actions (Fiat)</h5>
+                    <div class="d-flex gap-2 flex-wrap">
                         <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#AddFunds">
-                            <i class="bi bi-download me-1"></i> Deposit
+                            <i class="bi bi-plus-circle me-1"></i> Deposit
                         </button>
                         <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#soon">
-                            <i class="bi bi-send me-1"></i> Withdraw
+                            <i class="bi bi-arrow-up-circle me-1"></i> Withdraw
                         </button>
                     </div>
                 </div>
@@ -129,22 +151,28 @@
     <!-- Wallet Address Section -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <h5 class="card-title mb-3">Wallet Address</h5>
+            <h5 class="card-title mb-3">
+                <i class="bi bi-qr-code me-2"></i> Wallet Address
+            </h5>
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Wallet Address</label>
+                    <label class="form-label">
+                        <i class="bi bi-key me-1"></i> Public Address
+                    </label>
                     <div class="input-group">
                         <input type="text" class="form-control" id="publicKey" value="Ox{{ qpt_public_key }}" readonly>
-                        <button class="btn btn-outline-secondary copy-btn" data-target="publicKey">
+                        <button class="btn btn-outline-secondary copy-btn" data-target="publicKey" title="Copy to clipboard">
                             <i class="bi bi-clipboard"></i>
                         </button>
                     </div>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Wallet ID</label>
+                    <label class="form-label">
+                        <i class="bi bi-person-badge me-1"></i> Wallet ID
+                    </label>
                     <div class="input-group">
                         <input type="text" class="form-control" id="recipientId" value="{{ recipient_id }}" readonly>
-                        <button class="btn btn-outline-secondary copy-btn" data-target="recipientId">
+                        <button class="btn btn-outline-secondary copy-btn" data-target="recipientId" title="Copy to clipboard">
                             <i class="bi bi-clipboard"></i>
                         </button>
                     </div>
@@ -163,7 +191,9 @@
     <div class="card shadow-sm">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="card-title mb-0">Recent Transactions</h5>
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-list-check me-2"></i> Recent Transactions
+                </h5>
                 <button class="btn btn-sm btn-link" onclick="loadTransactionHistory()">
                     <i class="bi bi-arrow-clockwise"></i> Refresh
                 </button>
@@ -172,11 +202,11 @@
                 <table class="table table-hover" id="transaction-history">
                     <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>Type</th>
-                            <th>Amount</th>
-                            <th>Recipient</th>
-                            <th>Status</th>
+                            <th><i class="bi bi-calendar me-1"></i> Date</th>
+                            <th><i class="bi bi-arrow-left-right me-1"></i> Type</th>
+                            <th><i class="bi bi-currency-exchange me-1"></i> Amount</th>
+                            <th><i class="bi bi-person me-1"></i> Recipient</th>
+                            <th><i class="bi bi-info-circle me-1"></i> Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -193,50 +223,63 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Receive Funds</h5>
+                <h5 class="modal-title">
+                    <i class="bi bi-wallet2 me-2"></i> Receive Funds
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body text-center">
                 <div id="modalQrcode" class="mb-4"></div>
                 <div class="mb-3">
-                    <label class="form-label">Your Public Address</label>
+                    <label class="form-label">
+                        <i class="bi bi-key me-1"></i> Your Public Address
+                    </label>
                     <div class="input-group">
                         <input type="text" class="form-control" value="{{ qpt_public_key }}" readonly>
                         <button class="btn btn-outline-secondary copy-btn" data-target="publicKey">
-                            <i class="bi bi-clipboard"></i>
+                            <i class="bi bi-clipboard text-warning"></i>
                         </button>
                     </div>
                 </div>
-                <p class="text-muted">Scan the QR code or share your public address to receive funds</p>
+                <p class="text-muted">
+                    <i class="bi bi-info-circle me-1"></i> Scan the QR code or share your public address to receive funds
+                </p>
             </div>
         </div>
     </div>
 </div>
-
 
 <!-- Send Modal -->
 <div class="modal fade" id="sendModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Send Funds</h5>
+                <h5 class="modal-title">
+                    <i class="bi bi-send me-2"></i> Send Funds
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form id="transfer-form">
                 <div class="modal-body">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label for="currency" class="form-label">Currency</label>
+                        <label for="currency" class="form-label">
+                            <i class="bi bi-currency-exchange me-1"></i> Currency
+                        </label>
                         <select name="currency" id="currency" class="form-select">
                             <option value="QPT" selected>QPT</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="recipient_id" class="form-label">Recipient Address</label>
+                        <label for="recipient_id" class="form-label">
+                            <i class="bi bi-person me-1"></i> Recipient Address
+                        </label>
                         <input type="text" name="recipient_id" id="recipient_id" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label for="amount" class="form-label">Amount</label>
+                        <label for="amount" class="form-label">
+                            <i class="bi bi-cash-stack me-1"></i> Amount
+                        </label>
                         <div class="input-group">
                             <input type="number" step="0.01" name="amount" id="amount" class="form-control" required>
                             <span class="input-group-text">QPT</span>
@@ -248,7 +291,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i> Cancel
+                    </button>
                     <button type="submit" class="btn btn-primary">
                         <i class="bi bi-send-fill me-1"></i> Send
                     </button>
@@ -263,36 +308,46 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Buy QPT</h5>
+                <h5 class="modal-title">
+                    <i class="bi bi-cart me-2"></i> Buy QPT
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form method="post" action="{% url 'buy_qpt' %}">
+            <form id="buy-form" method="post" action="{% url 'buy_qpt' %}">
                 <div class="modal-body">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label for="currency" class="form-label">Currency</label>
+                        <label for="currency" class="form-label">
+                            <i class="bi bi-currency-exchange me-1"></i> Currency
+                        </label>
                         <select name="currency" id="currency" class="form-select">
                             <option value="QPT" selected>QPT</option>
                             <option value="HBAR" disabled>HBAR</option>
                         </select>
                     </div>
                     <div class="mb-3">
+                        <label for="buy-amount" class="form-label">
+                            <i class="bi bi-cash-stack me-1"></i> Amount to Buy
+                        </label>
                         <div class="input-group">
-                            <input type="number" step="0.01" name="amount" id="amount" class="form-control" required>
+                            <input type="number" step="0.01" name="amount" id="buy-amount" class="form-control" required>
                             <span class="input-group-text">QPT</span>
                         </div>
-                        <small class="text-primary">Your Fiat Balance: KES {{user.profile.funds}}</small>
+                        <small class="text-primary">
+                            <i class="bi bi-wallet2 me-1"></i> Your Fiat Balance: KES {{user.profile.funds|floatformat:2}}
+                        </small>
                     </div>
                     <div class="alert alert-warning">
                         <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                        1 QPT = KES 10, Be sure that you have enough money in your fiat wallet. <br>
-                        Transactions cannot be undone. Please be sure of your actions.
+                        1 QPT = KES 10. Be sure you have enough funds in your fiat wallet.
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-send-fill me-1"></i> Buy
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i> Cancel
+                    </button>
+                    <button type="submit" id="buy-button" class="btn btn-primary">
+                        <i class="bi bi-cart-check me-1"></i> Buy
                     </button>
                 </div>
             </form>
@@ -300,20 +355,18 @@
     </div>
 </div>
 
-<!-- Transfer Status Toast -->
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-    <div id="transferToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <strong class="me-auto">Transaction Status</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+<!-- With animation and auto-hide after 5 seconds -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+    <div id="transferToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="20000">
+        <div class="toast-header bg-primary text-white">
+            <strong class="me-auto">
+                <i class="bi bi-info-circle me-2"></i> Transaction Status
+            </strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
         </div>
-        <div class="toast-body" id="transfer-status"></div>
+        <div class="toast-body bg-light" id="transfer-status"></div>
     </div>
 </div>
-{% endblock %}
-
-{% block styles %}
-
 {% endblock %}
 
 {% block scripts %}
@@ -357,18 +410,12 @@ $(document).ready(function() {
     // Load initial transaction history
     loadTransactionHistory();
     
-    // Refresh balance button
+    // Auto-refresh balance every 2 seconds
+    const balanceRefreshInterval = setInterval(refreshBalances, 2000);
+    
+    // Manual refresh balance button
     $('#refresh-balance').click(function() {
-        fetch("{% url 'wallet-balance' %}")
-            .then(response => response.json())
-            .then(data => {
-                $('#qpt-balance').text(data.qpt_balance);
-                showToast('Balance refreshed successfully');
-            })
-            .catch(error => {
-                showToast('Error fetching balance');
-                console.error('Error:', error);
-            });
+        refreshBalances();
     });
     
     // Transfer form submission
@@ -395,7 +442,7 @@ $(document).ready(function() {
                 $('#sendModal').modal('hide');
                 $('#transfer-form')[0].reset();
                 loadTransactionHistory();
-                $('#refresh-balance').click(); // Refresh balance
+                refreshBalances();
             } else {
                 $('#transfer-status').html(`
                     <div class="d-flex align-items-center">
@@ -412,7 +459,117 @@ $(document).ready(function() {
             console.error('Error:', error);
         });
     });
-});
+    
+     // Buy form submission - FINAL VERSION
+    $('#buy-form').on('submit', function(e) {
+        e.preventDefault();
+        const form = $(this);
+        const buyButton = $('#buy-button');
+        const originalText = buyButton.html();
+        
+        // UI Loading State
+        buyButton.prop('disabled', true);
+        buyButton.addClass('btn-loading');
+        buyButton.html('<span class="invisible">' + originalText + '</span>');
+        
+        // Clear previous messages
+        $('#transfer-status').empty();
+        
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: form.serialize(),
+            dataType: 'json',
+            statusCode: {
+                400: function(response) {
+                    // Special handling for insufficient funds
+                    const depositBtn = `<button class="btn btn-sm btn-link p-0 ms-1" data-bs-toggle="modal" data-bs-target="#AddFunds">
+                        <u>Deposit now</u>
+                    </button>`;
+                    
+                    $('#transfer-status').html(`
+                        <div class="d-flex align-items-center alert alert-warning">
+                            <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+                            <div>
+                                ${response.responseJSON.message}
+                                ${depositBtn}
+                                <div class="text-muted small mt-1">
+                                    Current: KES ${response.responseJSON.current} | Needed: KES ${response.responseJSON.required}
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                }
+            },
+            success: function(data) {
+                if (data.status === 'success') {
+                    // Update balances
+                    $('#fiat-balance').text('KES ' + data.new_fiat);
+                    $('#qpt-balance').text(data.new_qpt);
+                    
+                    // Show success message
+                    $('#transfer-status').html(`
+                        <div class="d-flex align-items-center ">
+                            <i class="bi bi-check-circle-fill text-primary me-2"></i>
+                            ${data.message}
+                        </div>
+                    `);
+                    
+                    // Close modal after delay
+                    $('#buyModal').modal('hide');
+                } else {
+                    $('#transfer-status').html(`
+                        <div class="d-flex align-items-center alert alert-warning">
+                            <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+                            ${data.message}
+                        </div>
+                    `);
+                }
+            },
+            error: function(xhr) {
+                let errorMsg = 'An error occurred during purchase';
+                try {
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMsg = xhr.responseJSON.message;
+                    }
+                } catch (e) {
+                    console.error('Error parsing response:', e);
+                }
+                
+                $('#transfer-status').html(`
+                    <div class="d-flex align-items-center alert alert-warning">
+                        <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+                        ${errorMsg}
+                    </div>
+                `);
+            },
+            complete: function() {
+                // Always re-enable button
+                buyButton.prop('disabled', false);
+                buyButton.removeClass('btn-loading');
+                buyButton.html(originalText);
+                $('#buyModal').modal('hide');
+                // Show toast notification
+                transferToast.show();
+                
+                // Refresh transactions if needed
+                if ($('#transfer-status').find('.text-success').length) {
+                    loadTransactionHistory();
+                }
+            }
+        });
+    });
+function refreshBalances() {
+    fetch("{% url 'wallet-balance' %}")
+        .then(response => response.json())
+        .then(data => {
+            $('#qpt-balance').text(parseFloat(data.qpt_balance).toFixed(2));
+            //$('#fiat-balance').text('KES ' + parseFloat(data.fiat_balance).toFixed(2));
+        })
+        .catch(error => {
+            console.error('Error fetching balance:', error);
+        });
+}
 
 function loadTransactionHistory() {
     fetch("{% url 'wallet-history' %}")
@@ -425,7 +582,7 @@ function loadTransactionHistory() {
             tbody.append(`
                 <tr>
                     <td colspan="5" class="text-center py-4 text-muted">
-                        No transactions yet
+                        <i class="bi bi-info-circle me-2"></i> No transactions yet
                     </td>
                 </tr>
             `);
@@ -445,7 +602,7 @@ function loadTransactionHistory() {
                                 ${txn.transaction_type.charAt(0).toUpperCase() + txn.transaction_type.slice(1)}
                             </span>
                         </td>
-                        <td>${txn.amount} ${txn.currency}</td>
+                        <td>${parseFloat(txn.amount).toFixed(2)} ${txn.currency}</td>
                         <td class="text-truncate" style="max-width: 150px;" title="${txn.recipient_id}">
                             ${txn.recipient_id || 'N/A'}
                         </td>
@@ -474,5 +631,6 @@ function showToast(message) {
     const toast = new bootstrap.Toast(toastEl);
     toast.show();
 }
+});
 </script>
 {% endblock %}

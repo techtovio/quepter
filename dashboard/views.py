@@ -187,7 +187,7 @@ def pay_mpesa(request):
                 Transaction.objects.create(user=user, amount=amount, reference=reference)
                 Notification.objects.create(user=user, title="Payment Initiated", message=f"New payment of Kes {amount} has been initiated successfully, complete by entering your pin.")
                 #messages.success(request, "Payment initialized successfuly, please complete it by entering your pin")
-                messages.success(request, f"STK push initiated successfully, If you did not get any pop up on your phone try following this manual steps to complete your payment: {js['manual_instructions']}")
+                messages.success(request, f"STK push initiated successfully")
             else:
                 messages.warning(request, "An error occured while trying to process your payment, please try again later")
         else:
@@ -205,7 +205,7 @@ def activate_mpesa(request):
             reference = id_generator()
             ua = {
                     'Content-Type': 'application/json',
-                    'Authorization':'Basic RXMzSzN5c3lOMVVTMjBsaUtlRmo6SGpJOW5qQXVOOGJiSHFZNEhCVVZ3OXVYa0l3a1hwWjhlOUR4ekpUUw==',
+                    'Authorization':f'{os.getenv("HEDERA_AUTH")}',
                 }
             url = 'https://backend.payhero.co.ke/api/v2/payments'
             
@@ -240,7 +240,7 @@ def contribute(request):
             reference = id_generator()
             ua = {
                     'Content-Type': 'application/json',
-                    'Authorization':'Basic WDFkN3VBYVYzTUxsYjI1VmNhS2U6UHBEMlFnVkMxUXJOalNWTWU4bHhXejd6RFVNNWwzcldnQlcwZkR6cQ==',
+                    'Authorization':f'{os.getenv("HEDERA_AUTH")}',
                 }
             url = 'https://backend.payhero.co.ke/api/v2/payments'
             

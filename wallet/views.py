@@ -29,6 +29,7 @@ from hiero_sdk_python import (
 )
 from decimal import Decimal
 from django.http import HttpResponseRedirect
+from django.views.decorators.http import require_POST
 
 @login_required
 def wallet_details(request):
@@ -178,28 +179,60 @@ def fund_clubs(request):
         transfer_tokens(operator_id_sender=operator_id, operator_key_sender=operator_key, recipient_id=recipient_id, amount=1000)
     return render(request, 'contracts/assign_user_wallet.html')
 
+@login_required
+@require_POST
 def buy_qpt(request):
-    if request.method == 'POST':
-        amount = request.POST['amount']
-        f_amount = float(amount)
+    try:
+        amount = float(request.POST.get('amount'))
+        if amount <= 0:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Amount must be greater than zero'
+            }, status=400)
+            
+        conversion_rate = float(10)  # 1 QPT = 10 KES
+        required_funds = amount * conversion_rate
+        
+        if request.user.profile.funds < required_funds:
+            return JsonResponse({
+                'status': 'error',
+                'message': f"Insufficient funds. You need KES {required_funds:.2f} to buy {amount} QPT."
+            }, status=400)
+        
         operator_id = AccountId.from_string(os.getenv('OPERATOR_ID'))
         operator_key = PrivateKey.from_string(os.getenv('OPERATOR_KEY'))
         recipient_id = AccountId.from_string(request.user.wallet.recipient_id)
-        print(float(request.user.profile.funds))
-        print(float(request.user.profile.funds) > float(f_amount*10))
-        if float(request.user.profile.funds) >= float(f_amount*10):
-            buy = transfer_tokens(operator_id_sender=operator_id, operator_key_sender=operator_key, recipient_id=recipient_id, amount=int(amount))
-            if buy == True:
-                profile = Profile.objects.get(user=request.user)
-                profile.funds -= Decimal(f_amount*10)
-                profile.save()
-                messages.success(request, f'QPT Purchase was successful, {amount} QPT has been transfered to your wallet')
-            else:
-                messages.warning(request, 'An error occured while trying to purchase QPT, please try again.')
-        else:
-            messages.warning(request, f"You don't have sufficient funds to purchase {amount} QPT, please add funds and try again.")
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
+        
+        transfer_success = transfer_tokens(
+            operator_id_sender=operator_id,
+            operator_key_sender=operator_key,
+            recipient_id=recipient_id,
+            amount=int(amount)
+        )
+        
+        if not transfer_success:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Transaction failed. Please try again.'
+            }, status=500)
+        
+        # Update user funds
+        profile = Profile.objects.get(user=request.user)
+        profile.funds -= required_funds
+        profile.save()
+        
+        return JsonResponse({
+            'status': 'success',
+            'message': f'Successfully purchased {amount} QPT!',
+            'new_fiat_balance': f"{request.user.profile.funds:.2f}",
+            #'new_qpt_balance': f"{Decimal(request.user.wallet.qpt_balance) + amount:.2f}"
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': f'Error: {str(e)}'
+        }, status=500)
 
 TESTNET_MIRROR_URL = os.getenv('MIRROR_URL')#"https://testnet.mirrornode.hedera.com/api/v1"
 
