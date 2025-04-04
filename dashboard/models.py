@@ -118,12 +118,12 @@ class Profile(models.Model):
     referred_friends = models.ManyToManyField(User, related_name="referrals", blank=True)
     followers = models.ManyToManyField(User, related_name="followers", blank=True)
     bio = models.TextField(null=True, blank=True)
-    funds = models.DecimalField(max_digits=9, decimal_places=2, default=0)
+    funds = models.FloatField(default=0, max_length=12)
     shares = models.PositiveIntegerField(default=0)
     is_verified = models.BooleanField(default=False)
     is_pro = models.BooleanField(default=False)
     reputation_score = models.IntegerField(default=1)
-    points = models.DecimalField(default=0, decimal_places=2, max_digits=12)
+    points = models.FloatField(default=0)
     is_admin = models.BooleanField(default=False)
     skills = models.ManyToManyField(Skill, related_name="profiles", blank=True)
 
@@ -159,13 +159,13 @@ class Profile(models.Model):
         referrals_weight = 0.2
 
         return float(round(
-            float(self.points) * points_weight +
-            float(self.funds) * funds_weight +
+            float(self.points) * float(points_weight) +
+            float(self.funds) * float(funds_weight) +
             self.referred_friends.count() * referrals_weight,
             2
         ))
 
-    def rank(self) -> int | None:
+    def rank(self):
         """
         Calculates the user's rank compared to other profiles based on their rank score.
         Uses direct query-based ranking for better performance.

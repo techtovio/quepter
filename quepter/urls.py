@@ -10,10 +10,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 
-admin.site.site_header = "Quepter Cooperation"
-admin.site.index_title = "Quepter Cooperation"
-admin.site.site_header = "Quepter Cooperation"
-admin.site.site_title =  "Quepter Cooperation"
+
+admin.site.index_title = "QUEPTER YOUTH HUB"
+admin.site.site_header = "QUEPTER YOUTH HUB"
+admin.site.site_title =  "QUEPTER YOUTH HUB"
 
 urlpatterns = [
     path('oauth/admin/', admin.site.urls),

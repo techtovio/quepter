@@ -167,7 +167,7 @@ def calculate_score(proposal: AIProposal) -> float:
         return f"❌ Rejected. Score: {prob}% - Proposal needs significant improvement"
     #return score
 
-model = train_model()
+model = None
 
 def evaluate_proposal(proposal: AIProposal) -> str:
     if not model:
@@ -217,33 +217,3 @@ def calculate_backing_threshold(proposal: AIProposal) -> float:
     complexity_factor = (1 - proposal.risk_level) * 0.2  # Higher risk = Higher threshold
     
     return base_threshold + (base_threshold * complexity_factor)
-
-
-
-'''
-proposal = Proposal(
-    title="AI-Powered Investment Platform",
-    description="An AI-based platform that automates investment decisions using Hedera's network.",
-    proposer_skills=["Python", "AI", "Blockchain"],
-    required_skills=["AI", "Hedera", "Finance"],
-    club_liquidity=50000,
-    project_budget=10000,
-    expected_timeline=90,
-    market_demand_score=0.8,
-    club_success_rate=0.75,
-    risk_level=0.2,
-    proposer_reputation_score=0.9
-)
-
-result = evaluate_proposal(proposal)
-print(result)
-
-
-feedback = generate_feedback_report(proposal)
-for key, value in feedback.items():
-    print(f"{key}: {value}")
-
-
-threshold = calculate_backing_threshold(proposal)
-print(f"Suggested Backing Threshold: {threshold:.2f} QPT")'
-'''
